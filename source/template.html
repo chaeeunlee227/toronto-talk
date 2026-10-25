@@ -735,7 +735,8 @@ function distribute(raw){
   return {out,active:i};
 }
 function renderBoxes(){
-  const {out,active}=distribute(ansEl().value);
+  const hideTyped=sentenceMode()&&cur&&!cur.done;   // 문장 모드: 말한 내용은 아래 상자에만, 빈칸은 비워 둬요
+  const {out,active}=hideTyped?{out:boxLens.map(()=>""),active:0}:distribute(ansEl().value);
   boxEls.forEach((el,i)=>{
     const t=el.querySelector(".blank");
     const ph=i===0&&!out[0]&&placeholderTxt;
@@ -962,6 +963,13 @@ function expand(t){
 }
 const toks=t=>expand(t).split(/[^a-z0-9']+/).map(w=>w.replace(/'/g,"")).filter(Boolean);
 const tokEq=(a,b)=>a===b||isSpellingVariant(a,b);
+// 두 단어가 얼마나 비슷한지 (0~1, 편집 거리 기준)
+function similar(a,b){
+  if(a===b)return 1; const m=a.length,n=b.length; if(!m||!n)return 0;
+  let prev=[...Array(n+1).keys()];
+  for(let i=1;i<=m;i++){const curr=[i];for(let j=1;j<=n;j++)curr[j]=Math.min(prev[j]+1,curr[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=curr}
+  return 1-prev[n]/Math.max(m,n);
+}
 function alignTokens(T,S){
   const n=T.length,m=S.length,d=Array.from({length:n+1},()=>new Array(m+1).fill(0));
   for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)d[i][j]=tokEq(T[i],S[j])?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
@@ -974,13 +982,22 @@ function alignTokens(T,S){
   }
   while(i<n)raw.push({t:"miss",i:i++});
   while(j<m)raw.push({t:"extra",s:S[j++]});
-  // 빠뜨린 단어 바로 옆에 다른 말을 했으면 '다르게 말함'으로 묶어요
-  const ops=[];
-  for(let k=0;k<raw.length;k++){
-    const a=raw[k],b=raw[k+1];
-    if(b&&((a.t==="miss"&&b.t==="extra")||(a.t==="extra"&&b.t==="miss"))){const mi=a.t==="miss"?a:b,ex=a.t==="extra"?a:b;ops.push({t:"sub",i:mi.i,s:ex.s});k++}
-    else ops.push(a);
-  }
+  // 맞은 단어 사이 구간마다, 다르게 말한 단어를 그 구간에서 가장 비슷한 원래 단어와 짝지어요
+  // (예: "embrassed"만 말하면 문장 끝 단어가 아니라 빈칸 단어 자리와 짝지어요)
+  const ops=[]; let gap=[];
+  const flush=()=>{
+    const M=gap.filter(o=>o.t==="miss"), E=gap.filter(o=>o.t==="extra"), pair=new Map(); let from=0;
+    for(const e of E){
+      let best=-1,bs=-1;
+      for(let q=from;q<M.length;q++){const sc=similar(e.s,T[M[q].i])+(M.length===E.length&&q===E.indexOf(e)?0.2:0);if(sc>bs){bs=sc;best=q}}
+      if(best>=0&&(bs>=0.35||M.length===E.length)){pair.set(M[best].i,e.s);from=best+1;e.used=true}
+    }
+    for(const m of M)ops.push(pair.has(m.i)?{t:"sub",i:m.i,s:pair.get(m.i)}:m);
+    for(const e of E)if(!e.used)ops.push(e);
+    gap=[];
+  };
+  for(const o of raw){if(o.t==="ok"){flush();ops.push(o)}else gap.push(o)}
+  flush();
   return {hit,ops};
 }
 function gradeSentence(){
@@ -1051,15 +1068,14 @@ function renderSaid(){
       return isKey(o.i)&&hide?`<span class="tk miss key">빈칸</span>`:`<span class="tk miss">${esc(show(r.T[o.i]))}</span>`;
     }).join("");
     const keyMsg=r.ok?"빈칸 단어 맞음":"빈칸 단어 다름";
-    const coverN=cur.cover&&cur.cover[r.k]?cur.cover[r.k].filter(Boolean).length:okN;
-    box.innerHTML=`${attemptsHTML()}<span class="said-label">${(cur.attempts||[]).length&&!r.ok?`${cur.attempts.length}번째 시도`:"말한 문장 확인"} · ${r.T.length}단어 중 ${okN}개 맞음 · <b class="${r.ok?"good":"bad"}">${keyMsg}</b>${coverN>okN?` · 지금까지 ${coverN}/${r.T.length}`:""}</span>
+    box.innerHTML=`<span class="said-label">말한 문장 확인 · ${r.T.length}단어 중 ${okN}개 맞음 · <b class="${r.ok?"good":"bad"}">${keyMsg}</b></span>
       <span class="said-chips">${chips}</span>
       <span class="said-legend"><span class="tk ok">맞음</span><span class="tk sub">다르게 말함</span><span class="tk miss">빠뜨림</span><span class="tk extra">없는 말</span><span class="lg-key">밑줄은 빈칸 자리</span></span>`;
   }else if(v.trim()){
-    box.innerHTML=`${attemptsHTML()}<span class="said-label">${(cur.attempts||[]).length?`${cur.attempts.length+1}번째 시도`:"말한 문장"}</span><span class="said-text">${esc(v)}</span>`;
+    box.innerHTML=`<span class="said-label">말한 문장</span><span class="said-text">${esc(v)}</span>`;
   }else{
     const tries=(cur.attempts||[]).length;
-    box.innerHTML=tries?`${attemptsHTML()}<span class="said-label">${tries+1}번째 시도</span><span class="said-text muted">${listening?"듣는 중… 문장 전체를 다시 말해 보세요.":"다시 말하면 새 문장으로 인식해요. 빈칸 단어만 맞히면 정답이에요."}</span>`
+    box.innerHTML=tries?`<span class="said-label">다시 말하기</span><span class="said-text muted">${listening?"듣는 중… 문장 전체를 다시 말해 보세요.":"다시 말하면 새 문장으로 인식해요. 빈칸 단어만 맞히면 정답이에요."}</span>`
       :`<span class="said-label">문장 모드</span><span class="said-text muted">${canMic?"말하기 버튼을 누르고":"키보드의 마이크를 눌러"} 문장 전체를 말하거나 입력하세요. 말을 멈추면 자동으로 확인해요.</span>`;
   }
 }
