@@ -1,0 +1,99 @@
+Is the apartment still ___? | available | 그 집 아직 나와 있어요? | 집 문의 첫 질문.
+Could I come by for a ___? | viewing/showing | 집 보러 가도 될까요? | viewing = 집 보기.
+How much is the ___ a month? | rent | 월세가 얼마예요? | 기본 질문.
+Are ___ included? | utilities | 공과금 포함이에요? | utilities = 전기·수도·가스 등.
+Is there ___ laundry? | in-suite/ensuite/in-unit | 집 안에 세탁기 있어요? | in-suite laundry = 세대 내 세탁기.
+Are ___ allowed? | pets | 반려동물 키워도 돼요? | pet-friendly.
+Is ___ included? | parking | 주차 포함이에요? | 주차 공간.
+When is the ___-in date? | move | 입주 날짜가 언제예요? | move-in date.
+I'm ___ out at the end of the month. | moving | 이번 달 말에 이사 나가요. | move out.
+Do I need to give ___ before moving out? | notice | 이사 나가기 전에 미리 통보해야 해요? | give notice = 통보하다.
+Can I ___ the apartment? | sublet | 집을 전대해도 돼요? | sublet = 재임대하다.
+I'm looking for a ___. | roommate | 룸메이트를 구하고 있어요. | roommate.
+We ___ the rent three ways. | split | 월세를 셋이 나눠 내요. | split = 나누다.
+The ___ is broken. | dishwasher | 식기세척기가 고장 났어요. | broken = 고장 난.
+The heat isn't ___. | working | 난방이 안 돼요. | not working = 작동 안 하는.
+The toilet is ___. | clogged | 변기가 막혔어요. | clogged = 막힌.
+Could you send someone to ___ it? | fix/repair | 고치러 사람 보내 주실 수 있어요? | fix = 고치다.
+There are ___ in the kitchen. | mice | 부엌에 쥐가 있어요. | 해충 신고.
+I locked myself ___. | out | 열쇠 없이 문을 잠가 버렸어요. | lock oneself out.
+Can I get a spare ___? | key | 여분 열쇠 받을 수 있어요? | spare key.
+The ___ is too high this month. | bill | 이번 달 요금이 너무 많이 나왔어요. | 공과금 청구서.
+I need to set ___ internet. | up | 인터넷 설치해야 해. | set up = 설치하다.
+The internet is ___ again. | down | 인터넷 또 안 돼. | down = 작동 중단.
+Have you tried turning it off and on ___? | again | 껐다가 다시 켜 봤어? | 기술 지원 단골 질문.
+I'd like to ___ my plan. | upgrade | 요금제를 업그레이드하고 싶어요. | phone/internet plan.
+Is there a ___ fee? | cancellation | 해지 수수료가 있어요? | cancellation fee.
+I'm calling about my ___. | account | 제 계정 관련해서 전화드렸어요. | 고객센터 첫마디.
+Can I speak to a ___? | supervisor/manager | 책임자와 통화할 수 있을까요? | 문제 해결이 안 될 때.
+I've been on ___ for an hour. | hold | 한 시간째 대기 중이에요. | on hold = 통화 대기.
+Can I get a ___ number? | reference/confirmation | 접수 번호 받을 수 있을까요? | 상담 후 기록용.
+I'd like to make a ___. | complaint | 불만을 접수하고 싶어요. | make a complaint.
+I'd like to make a ___ into my savings account. | deposit | 입금하고 싶어요. | 은행 창구에서. deposit = 입금.
+I'd like to ___ some cash. | withdraw | 현금을 좀 인출하고 싶어요. | withdraw = 인출하다.
+Where's the nearest ___? | ATM | 가장 가까운 ATM이 어디예요? | 현금 인출기.
+What's my account ___? | balance | 제 계좌 잔액이 얼마예요? | balance = 잔액.
+I'd like to ___ money to Korea. | send/transfer/wire | 한국으로 송금하고 싶어요. | 해외 송금.
+What's the exchange ___? | rate | 환율이 어떻게 돼요? | exchange rate.
+Are there any monthly ___? | fees | 월 수수료가 있어요? | fee = 수수료.
+I'd like to apply for a credit ___. | card | 신용카드를 신청하고 싶어요. | apply for.
+I need to build my credit ___. | history | 신용 기록을 쌓아야 해요. | credit history.
+My card was ___. | stolen | 카드를 도난당했어요. | stolen.
+I'd like to ___ my card. | cancel/block | 카드를 정지하고 싶어요. | 분실 시.
+There's a charge I don't ___. | recognize | 모르는 결제 내역이 있어요. | 부정 사용 신고.
+I'd like to ___ that charge. | dispute | 그 결제에 이의를 제기하고 싶어요. | dispute = 이의 제기.
+I need to pay my ___ card bill. | credit | 신용카드 대금을 내야 해요. | credit card bill.
+Can I set up automatic ___? | payments | 자동이체 설정할 수 있어요? | automatic payments.
+What's the interest ___? | rate | 이자율이 얼마예요? | interest rate.
+I'm saving up ___ a car. | for | 차 사려고 돈 모으는 중이야. | save up for.
+I'd like to make an appointment for a ___. | check-up/checkup | 건강검진 예약하고 싶어요. | check-up = 정기 검진.
+I've had a ___ for three days. | fever | 3일째 열이 나요. | fever = 열.
+I have a ___ throat. | sore | 목이 아파요. | sore throat = 인후통.
+I have a runny ___. | nose | 콧물이 나요. | runny nose.
+I've been ___ all night. | coughing | 밤새 기침했어요. | cough.
+I feel ___. | dizzy | 어지러워요. | dizzy = 어지러운.
+I think I ___ my ankle. | sprained/twisted | 발목을 삔 것 같아요. | sprain = 삐다.
+It ___ when I walk. | hurts | 걸을 때 아파요. | hurt = 아프다.
+On a scale of one to ten, how bad is the ___? | pain | 1부터 10까지 중에 통증이 어느 정도예요? | 병원 단골 질문.
+Are you ___ any medication? | taking/on | 복용 중인 약 있어요? | take medication.
+Do you have any food or drug ___? | allergies | 알레르기 있어요? | allergy.
+Take this twice a ___. | day | 하루에 두 번 드세요. | 복용 지시.
+Take it with ___. | food | 음식과 함께 드세요. | 복용 지시.
+Are there any side ___? | effects | 부작용이 있어요? | side effects.
+Can I get this ___ the counter? | over | 이거 처방전 없이 살 수 있어요? | over the counter(OTC) = 일반의약품.
+I need a ___ for that. | prescription | 그건 처방전이 필요해요. | prescription.
+I'd like to ___ my prescription. | renew/refill | 처방전을 갱신하고 싶어요. | refill = 다시 조제.
+I need a ___ note for work. | sick/doctor's | 회사에 낼 진단서가 필요해요. | sick note = 병가 증명.
+I'm calling in ___ today. | sick | 오늘 병가 낼게요. | call in sick.
+Can I get a ___ to a specialist? | referral | 전문의 의뢰서 받을 수 있어요? | referral = 의뢰.
+Is this covered by my ___? | insurance | 이거 보험 적용돼요? | covered = 보장되는.
+I need to get my teeth ___. | cleaned | 스케일링 받아야 해요. | get one's teeth cleaned.
+I have a ___. | toothache | 이가 아파요. | toothache.
+I need to go to the ___ room. | emergency | 응급실에 가야 해요. | emergency room(ER).
+Call 9-1-1! It's an ___! | emergency | 911 불러! 응급 상황이야! | 북미 응급 번호 911.
+I'd like to get a ___ shot. | flu | 독감 주사 맞고 싶어요. | flu shot.
+I need to ___ out this form. | fill | 이 양식 작성해야 해요. | fill out = 작성하다.
+Please ___ here. | sign | 여기 서명해 주세요. | sign = 서명하다.
+Could you ___ that for me? | spell | 철자 불러 주실래요? | 서류 작성 시.
+What's your date of ___? | birth | 생년월일이 어떻게 되세요? | date of birth(DOB).
+Can I see some ___? | ID/identification | 신분증 보여 주시겠어요? | ID.
+I need two pieces of ___. | ID/identification | 신분증 두 종류가 필요해요. | 관공서 단골.
+What's your postal ___? | code | 우편번호가 어떻게 돼요? | 캐나다는 postal code, 미국은 zip code.
+I'd like to ___ a package. | send/mail/ship | 소포를 보내고 싶어요. | 우체국에서.
+I'm here to pick ___ a package. | up | 택배 찾으러 왔어요. | pick up.
+Do you need my ___ for the package? | signature | 서명이 필요한가요? | signature = 서명.
+I need to ___ my address. | change/update | 주소를 변경해야 해요. | 이사 후.
+When is the ___ for this? | deadline | 이거 마감이 언제예요? | deadline.
+How long does it ___ to process? | take | 처리하는 데 얼마나 걸려요? | processing time.
+I'd like to ___ an appointment. | reschedule | 예약을 변경하고 싶어요. | reschedule = 일정 변경.
+I need to ___ my appointment. | cancel | 예약을 취소해야 해요. | cancel.
+I'm here for my two o'clock ___. | appointment | 2시 예약하고 왔어요. | 접수할 때.
+Please take a ___ and wait. | number | 번호표 뽑고 기다리세요. | 대기 번호.
+I'd like to get a haircut. Just a ___. | trim | 머리 다듬으러 왔어요. 살짝만요. | trim = 다듬기.
+Not too ___ on the sides. | short | 옆은 너무 짧지 않게 해 주세요. | 미용실 요청.
+Can I drop off my ___ cleaning? | dry | 드라이클리닝 맡겨도 돼요? | dry cleaning.
+When will my suit be ___? | ready | 언제 찾으러 오면 돼요? | 완성 시기.
+The garbage ___ is on Thursday. | pickup/collection | 쓰레기 수거일은 목요일이에요. | garbage pickup.
+I need to ___ my car in for repairs. | take/bring | 차를 수리 맡겨야 해. | take in = 맡기다.
+My car broke ___ on the highway. | down | 고속도로에서 차가 고장 났어. | break down.
+I have a flat ___. | tire | 타이어가 펑크 났어요. | flat tire. 캐나다·미국 철자 tire.

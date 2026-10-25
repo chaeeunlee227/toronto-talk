@@ -1,0 +1,61 @@
+What's on the ___ for today? ||| agenda는 회의에서 다룰 안건 목록이에요. 회의 시작 때 오늘 무엇을 논의할지 확인하는 질문이에요.
+Who's taking ___? ||| take notes는 회의 내용을 받아 적는다는 뜻이에요. 회의록 담당을 정할 때 써요.
+Can everyone ___ my screen? ||| 화상회의에서 화면을 공유한 뒤 다른 사람들에게 잘 보이는지 확인하는 말이에요.
+You're on ___. ||| on mute는 음소거 상태라는 뜻이에요. 화상회의에서 상대가 말하는데 소리가 안 들릴 때 알려 주는 말이에요.
+Sorry, I was on mute. Can you hear me ___? ||| 음소거를 풀고 나서 이제 소리가 들리는지 확인하는 말이에요. 화상회의에서 아주 자주 해요.
+Let's ___ for a few more people to join. ||| wait for는 ~를 기다리다라는 뜻이에요. 회의 시작 시간이 됐는데 아직 다 안 들어왔을 때 써요.
+Does anyone have any ___? ||| 발표나 회의를 마무리하면서 질문을 받는 말이에요. Any questions?로 짧게 말하기도 해요.
+We're getting off ___. ||| off track은 원래 주제나 계획에서 벗어났다는 뜻이에요. 회의가 딴 얘기로 흐를 때 다시 잡는 말이에요.
+Let's stay on ___. ||| stay on topic은 주제에서 벗어나지 않는다는 뜻이에요. 회의 진행자가 대화를 정리할 때 써요.
+Let's ___ a vote. ||| take a vote는 투표로 결정한다는 뜻이에요. 의견이 갈릴 때 손을 들어 정하자고 할 때 써요.
+I'd like to ___ a different approach. ||| suggest와 propose는 제안하다라는 뜻이에요. propose가 조금 더 격식 있는 느낌이에요.
+I'm not sure I ___. ||| 직접적으로 I disagree라고 하지 않고 동의하기 어렵다고 부드럽게 반대하는 표현이에요.
+I see your point, ___... ||| 상대 의견을 먼저 인정한 뒤 but으로 내 의견을 덧붙이는 방식이에요. 정중하게 반대할 때 많이 써요.
+Let me get ___ to you on that. ||| get back to someone은 나중에 다시 연락하다라는 뜻이에요. 바로 답하기 어려울 때 시간을 버는 말이에요.
+Who's the ___ on this? ||| lead는 일을 주도하는 담당자라는 뜻이에요. 이 일의 책임자가 누구인지 물을 때 써요.
+Who's ___ for this task? ||| be responsible for는 ~에 책임이 있다, ~를 맡고 있다는 뜻이에요.
+What's the ___ on this? ||| deadline은 마감일, timeline은 전체 일정을 뜻해요. 언제까지 해야 하는지 물을 때 써요.
+We're ___ schedule. ||| behind schedule은 일정보다 늦은, ahead of schedule은 일정보다 빠른이라는 뜻이에요.
+We need to ___ up the pace. ||| pick up the pace는 속도를 높이다라는 뜻이에요. 일이 늦어질 때 서두르자고 하는 말이에요.
+Let's ___ for Friday. ||| aim for는 ~를 목표로 하다라는 뜻이에요. 확정은 아니지만 금요일까지 해 보자는 느낌이에요.
+That's a ___ goal. ||| realistic은 현실적인, 달성 가능한이라는 뜻이에요. 반대말은 unrealistic이에요.
+We need to ___ expectations with the client. ||| manage expectations는 상대가 기대하는 수준을 현실에 맞게 조정한다는 뜻이에요. 고객 관리에서 자주 써요.
+That's out of ___. ||| scope는 업무 범위예요. out of scope는 원래 맡기로 한 일의 범위를 벗어났다는 뜻이에요.
+I've got a lot on my ___ right now. ||| have a lot on one's plate는 접시에 음식이 가득하듯 할 일이 많다는 뜻이에요.
+I'll ___ it a priority. ||| make it a priority는 그 일을 최우선으로 처리하겠다는 뜻이에요.
+It's not a ___ right now. ||| priority는 우선순위예요. 지금 당장 급한 일은 아니라고 말할 때 써요.
+Could you give me a status ___? ||| status update는 진행 상황 보고예요. 일이 어디까지 됐는지 물을 때 써요.
+Everything's on ___. ||| on track은 계획대로 잘 진행되고 있다는 뜻이에요. 반대는 off track이에요.
+Let's ___ out a solution. ||| figure out과 work out은 방법을 찾아내다, 해결하다라는 뜻이에요.
+What's the ___ case scenario? ||| worst-case scenario는 일어날 수 있는 최악의 경우예요. 반대는 best-case scenario예요.
+Let's have a ___ B. ||| plan B는 원래 계획이 안 될 때를 대비한 대안이에요. 한국어로도 플랜 B라고 하죠.
+I'll ___ on it right away. ||| get on it은 바로 그 일에 착수하겠다는 뜻이에요. 요청을 받았을 때 시원하게 대답하는 말이에요.
+Good ___! ||| Good job과 Good work는 '잘했어요'라는 칭찬이에요. 동료나 팀원에게 가볍게 써요.
+Great work, ___. ||| Great work, team은 팀 전체의 수고를 칭찬하는 말이에요. 프로젝트를 마치고 많이 써요.
+I'd like to ___ feedback on the draft. ||| give feedback은 의견이나 평가를 주다라는 뜻이에요. draft는 초안이에요.
+Do you have any ___ for me? ||| 내 일에 대한 평가나 개선점을 먼저 물어보는 표현이에요. 적극적인 태도로 보여요.
+I have a performance ___ next week. ||| performance review는 인사 평가 면담이에요. 북미 회사에서는 보통 1년에 한두 번 해요.
+I got ___! ||| get promoted는 승진하다라는 뜻이에요. 좋은 소식을 전할 때 써요.
+I'm ___ to a new role. ||| transition to는 새로운 자리나 상태로 옮겨 간다는 뜻이에요. 직무를 바꿀 때 자주 써요.
+We're ___! Know anyone? ||| hire는 채용하다라는 뜻이에요. We're hiring은 채용 공고 문구로도 자주 보여요.
+I have a job ___ tomorrow. ||| job interview는 취업 면접이에요. 면접관은 interviewer, 지원자는 candidate라고 해요.
+Tell me a bit about ___. ||| 면접 첫 질문으로 아주 흔해요. 경력과 강점을 1~2분 정도로 소개하면 돼요.
+Why do you want to ___ here? ||| 지원 동기를 묻는 면접 질문이에요. 회사에 대해 조사한 내용을 담아 답하면 좋아요.
+Where do you see yourself in five ___? ||| 5년 뒤의 목표를 묻는 면접 단골 질문이에요. 회사와 함께 성장하고 싶다는 방향으로 답하는 경우가 많아요.
+What are your salary ___? ||| salary expectations는 희망 연봉이에요. 북미에서는 범위로 답하는 경우가 많아요.
+When can you ___? ||| 입사 가능 날짜를 묻는 질문이에요. 현 직장에 2주 통보를 해야 하면 그만큼 말하면 돼요.
+Do you have any questions for ___? ||| 면접 끝에 거의 항상 나오는 질문이에요. 질문을 한두 개 준비해 가는 게 좋아요.
+I work ___-time. ||| full-time은 정규 근무, part-time은 시간제 근무예요.
+I'm working ___ tonight. ||| work late는 늦게까지 일하다, 즉 야근한다는 뜻이에요.
+I'm taking the day ___. ||| take the day off는 하루 휴가를 낸다는 뜻이에요. take Friday off처럼 날짜를 넣어도 돼요.
+I'm ___ today. Back tomorrow. ||| be off는 쉬는 날이라는 뜻이에요. 근무가 없는 날을 말할 때 써요.
+Let's ___ lunch and talk. ||| grab lunch는 가볍게 점심을 먹다라는 뜻이에요. 식사하며 편하게 얘기하자는 제안이에요.
+Can I ___ your ear for a second? ||| borrow someone's ear는 잠깐 얘기 좀 들어 달라는 뜻이에요. 동료에게 조용히 말을 걸 때 써요.
+Let's think about the big ___. ||| big picture는 세부 사항이 아닌 전체적인 상황이에요. 작은 문제에 매달리지 말자는 뜻으로 써요.
+It's a ___-win situation. ||| win-win은 양쪽 모두에게 이득이 되는 상황이에요.
+Let's ___ this to the next level. ||| take it to the next level은 한 단계 더 발전시키다라는 뜻이에요.
+I'll ___ you posted. ||| keep someone posted는 상황이 바뀌면 계속 알려 주겠다는 뜻이에요.
+I need to run it ___ my boss. ||| run something by someone은 결정하기 전에 ~에게 확인받는다는 뜻이에요.
+We're on a tight ___. ||| tight는 빠듯한이라는 뜻이에요. tight deadline은 시간 여유가 없는 마감이에요.
+Sorry, I have to ___. I have another meeting. ||| drop off나 hop off는 화상회의나 통화에서 먼저 나간다는 뜻이에요.
+Thanks everyone for your ___. ||| 회의를 마칠 때 참석자들에게 시간 내줘서 고맙다고 하는 인사예요.

@@ -1,0 +1,103 @@
+This soup is a bit too ___. Can I get some water? | salty | 이 수프는 좀 너무 짜요. 물 좀 주실래요? | salty는 짠이라는 뜻이에요. 음식에 소금이 많을 때 써요.
+The lemonade is really ___. | sour/tart | 레모네이드가 정말 시어요. | sour는 신맛이에요. tart는 상큼하게 새콤한 느낌이에요.
+Dark chocolate is a little ___. | bitter | 다크 초콜릿은 조금 써요. | bitter는 쓴맛이에요. 커피나 맥주 맛을 말할 때도 써요.
+Is this dish ___? I can't handle heat. | spicy/hot | 이 음식 매워요? 저 매운 거 잘 못 먹어요. | spicy와 hot은 매운이라는 뜻이에요. heat은 매운 정도를 가리켜요.
+Could you make it ___ spicy? | mild/less | 덜 맵게 해 주실 수 있어요? | mild는 순한, 맵지 않은이라는 뜻이에요. 매운 단계는 mild, medium, hot 순서예요.
+I like my curry extra ___. | spicy/hot | 저는 카레를 아주 맵게 먹는 게 좋아요. | extra spicy는 아주 맵게라는 주문 표현이에요.
+This cake is way too ___ for me. | sweet | 이 케이크는 저한테 너무 달아요. | sweet은 단맛이에요. way too는 '너무너무'라는 강조예요.
+I love the ___ and sour sauce. | sweet | 새콤달콤한 소스가 정말 좋아요. | sweet and sour는 새콤달콤한 맛이에요. 탕수육 소스 맛을 떠올리면 돼요.
+The soup is a little ___. It needs more salt. | bland | 수프가 좀 싱거워요. 소금이 더 필요해요. | bland는 밋밋하고 싱거운이라는 뜻이에요. 부정적인 느낌이에요.
+This broth is rich and ___. | savoury/savory | 이 국물은 진하고 감칠맛이 나요. | savoury는 짭짤하고 감칠맛 나는 맛이에요. 캐나다 철자는 savoury예요.
+Mushrooms add a lot of ___ flavour. | umami/savoury/savory | 버섯은 감칠맛을 많이 더해 줘요. | umami는 감칠맛이에요. 영어권에서도 그대로 써요.
+This dressing is nice and ___. | tangy/zesty | 이 드레싱은 상큼하고 새콤해요. | tangy는 톡 쏘게 새콤한, zesty는 상큼하고 산뜻한 맛이에요.
+The lemon gives it a nice ___ kick. | citrusy/zesty | 레몬이 상큼한 맛을 더해 줘요. | kick은 맛의 포인트, 톡 쏘는 느낌이에요.
+This coffee has a ___ aftertaste. | bitter | 이 커피는 끝맛이 써요. | aftertaste는 먹고 난 뒤 남는 맛이에요.
+The wine has a ___ finish. | smooth | 이 와인은 끝맛이 부드러워요. | finish는 와인이나 커피를 마신 뒤의 마무리 맛이에요.
+This sauce is too ___. There's so much butter. | rich/heavy | 이 소스는 너무 느끼해요. 버터가 정말 많네요. | rich와 heavy는 진하고 기름져서 부담스러운 맛이에요. 한국어 '느끼하다'에 가까워요.
+The fries are a bit ___. | greasy/oily | 감자튀김이 좀 기름져요. | greasy는 기름이 번들번들한이라는 뜻이에요. 부정적인 느낌이에요.
+I want something ___ and refreshing. | light | 가볍고 상큼한 걸 먹고 싶어요. | light는 부담 없이 가벼운 음식이라는 뜻이에요. 반대는 heavy예요.
+This salad is so ___. | refreshing | 이 샐러드 정말 상큼해요. | refreshing은 산뜻하고 개운한이라는 뜻이에요.
+The pasta was perfectly ___. | seasoned | 파스타 간이 완벽했어요. | seasoned는 간이 된이라는 뜻이에요. season은 간을 하다예요.
+It could use a little more ___. | salt/seasoning | 소금을 조금 더 넣으면 좋겠어요. | could use는 ~가 있으면 좋겠다라는 부드러운 표현이에요.
+This is ___. What's in it? | delicious/amazing | 이거 정말 맛있어요. 뭐가 들어갔어요? | delicious는 아주 맛있는이라는 뜻이에요. 일상에선 so good도 많이 써요.
+It's ___. Not bad, but not great. | okay/alright/fine | 그냥 그래요. 나쁘진 않은데 대단하진 않아요. | it's okay는 그저 그렇다는 뜻이에요. 억양에 따라 미지근한 평가가 돼요.
+The steak was cooked to ___. | perfection | 스테이크가 완벽하게 구워졌어요. | cooked to perfection은 딱 알맞게 조리됐다는 칭찬이에요.
+This is ___ good. | so/really/super | 이거 진짜 맛있다. | so good은 아주 맛있다는 가장 흔한 표현이에요.
+This tastes ___ my grandma's cooking. | like | 이거 우리 할머니 요리 맛이 나요. | taste like는 ~ 같은 맛이 나다라는 뜻이에요.
+What does it taste ___? | like | 그거 무슨 맛이야? | What does it taste like?는 맛을 물어보는 기본 질문이에요.
+It has a ___ flavour, kind of like cinnamon. | warm/spicy | 계피 같은 따뜻한 풍미가 있어요. | warm flavour는 계피·생강처럼 따뜻한 느낌의 향신료 맛이에요.
+The milk tastes ___. I think it's gone bad. | off/sour | 우유 맛이 이상해요. 상한 것 같아요. | taste off는 맛이 변했다는 뜻이에요. go bad는 상하다예요.
+This bread is ___. It's hard as a rock. | stale | 이 빵 오래돼서 굳었어요. 돌처럼 딱딱해요. | stale은 빵이나 과자가 오래돼서 눅눅하거나 딱딱해진 상태예요.
+These strawberries are so ___. | fresh/sweet/juicy | 이 딸기 정말 신선해요. | fresh는 신선한이라는 뜻이에요. 반대는 stale이나 old예요.
+The peach was so ___ it dripped everywhere. | juicy | 복숭아가 너무 즙이 많아서 사방에 흘렀어요. | juicy는 즙이 많은, 촉촉한이라는 뜻이에요.
+These chips are really ___. | crunchy | 이 칩 정말 바삭바삭해요. | crunchy는 오도독 씹히는 단단한 바삭함이에요. 칩, 견과류, 생채소에 써요.
+The fried chicken is ___ on the outside and juicy inside. | crispy | 프라이드치킨이 겉은 바삭하고 속은 촉촉해요. | crispy는 얇고 가볍게 바삭한 느낌이에요. 튀김에 자주 써요.
+The cookies are ___ in the middle. | chewy/soft | 쿠키 가운데가 쫀득해요. | chewy는 쫀득쫀득하게 씹히는이라는 뜻이에요.
+The rice cakes are really ___. | chewy | 떡이 정말 쫄깃해요. | chewy는 쫄깃한 식감을 말할 때 가장 가까운 단어예요.
+The steak was a bit ___. | tough/chewy | 스테이크가 좀 질겼어요. | tough는 고기가 질긴이라는 뜻이에요. 반대는 tender예요.
+The beef is so ___ it melts in your mouth. | tender | 소고기가 너무 부드러워서 입에서 녹아요. | tender는 고기가 연하고 부드러운이라는 뜻이에요.
+The cheesecake is rich and ___. | creamy | 치즈케이크가 진하고 크리미해요. | creamy는 크림처럼 부드럽고 진한 질감이에요.
+The mashed potatoes are so ___. | smooth/creamy | 으깬 감자가 정말 부드러워요. | smooth는 덩어리 없이 매끈한 질감이에요.
+The sauce is a bit ___. It has little bits in it. | chunky/lumpy | 소스에 덩어리가 좀 있어요. | chunky는 건더기가 큼직한, lumpy는 덩어리가 져서 매끄럽지 않은 질감이에요.
+The cake is light and ___. | fluffy | 케이크가 가볍고 폭신폭신해요. | fluffy는 공기가 들어간 듯 폭신한 질감이에요. 팬케이크에도 자주 써요.
+These pancakes are so ___. | fluffy | 이 팬케이크 정말 폭신해요. | fluffy는 부풀어서 폭신한이라는 뜻이에요.
+The fries got ___ in the takeout box. | soggy | 포장 용기 안에서 감자튀김이 눅눅해졌어요. | soggy는 물기를 먹어 눅눅하고 흐물흐물한 상태예요.
+The cereal is ___ already. | soggy/mushy | 시리얼이 벌써 눅눅해졌어요. | soggy는 우유에 불어서 눅눅한 상태예요.
+The vegetables are overcooked and ___. | mushy | 채소가 너무 익어서 물컹해요. | mushy는 흐물흐물하고 물컹한 질감이에요.
+The jelly is ___ and fun to eat. | wobbly/jiggly | 젤리가 탱글탱글 흔들려서 먹는 재미가 있어요. | jiggly는 말랑하게 흔들리는 질감이에요.
+The mochi is soft and ___. | chewy/squishy | 모찌는 부드럽고 쫀득해요. | squishy는 말랑말랑하게 눌리는 느낌이에요.
+The bread has a ___ crust. | crusty/crispy | 이 빵은 겉껍질이 바삭해요. | crust는 빵 겉껍질이에요. crusty bread는 겉이 단단하고 바삭한 빵이에요.
+The croissant is buttery and ___. | flaky | 크루아상이 버터 향이 나고 결이 바삭해요. | flaky는 얇은 층이 겹겹이 부서지는 질감이에요.
+The fish is ___ and falls apart easily. | flaky/tender | 생선살이 결대로 부드럽게 잘 갈라져요. | flaky는 생선살이 결대로 부서지는 상태를 말할 때도 써요.
+The noodles are a bit too ___. | soft/mushy | 면이 좀 너무 퍼졌어요. | soft는 면이 불어서 퍼진 상태를 말해요. 꼬들꼬들한 면은 firm이나 al dente예요.
+I like my pasta al ___. | dente | 저는 파스타를 알 덴테로 좋아해요. | al dente는 심이 살짝 씹히게 삶은 상태예요.
+The eggs are ___. I like them softer. | rubbery/overcooked | 달걀이 고무처럼 질겨요. 저는 더 부드러운 게 좋아요. | rubbery는 고무처럼 질기고 탄력 있는 질감이에요. 부정적이에요.
+The sauce is too ___. Add some water. | thick | 소스가 너무 걸쭉해요. 물을 좀 넣어. | thick은 걸쭉한, thin은 묽은이라는 뜻이에요.
+The soup is a little ___. Let it simmer longer. | thin/watery | 수프가 좀 묽어요. 더 오래 끓여. | watery는 물처럼 묽어서 맛이 약한 느낌이에요. simmer는 약불로 끓이다예요.
+The peanut butter is ___, not smooth. | crunchy/chunky | 땅콩버터가 부드러운 게 아니라 알갱이가 씹히는 거예요. | 땅콩버터는 smooth와 crunchy 두 종류가 있어요.
+The avocado isn't ___ yet. | ripe | 아보카도가 아직 안 익었어요. | ripe는 과일이 익은이라는 뜻이에요. 너무 익으면 overripe예요.
+These bananas are ___. Let's make banana bread. | overripe | 이 바나나들 너무 익었어. 바나나 빵 만들자. | overripe는 너무 익어서 물러진 상태예요.
+The apple is nice and ___. | crisp/crunchy | 사과가 아삭아삭해요. | crisp는 신선한 과일이나 채소가 아삭한 느낌이에요.
+The lettuce is ___. It's been in the fridge too long. | wilted/limp | 상추가 시들었어요. 냉장고에 너무 오래 있었어요. | wilted는 채소가 시들어 축 처진 상태예요.
+The coffee is ___. Can you heat it up? | lukewarm/cold | 커피가 미지근해요. 데워 줄 수 있어요? | lukewarm은 미지근한이라는 뜻이에요.
+Careful, it's ___ hot. | piping/boiling | 조심해, 엄청 뜨거워. | piping hot은 김이 날 정도로 아주 뜨거운이라는 뜻이에요.
+I'd like it ___ cold, please. | ice | 아주 차갑게 주세요. | ice cold는 얼음처럼 차가운이라는 뜻이에요.
+The soda has gone ___. | flat | 탄산이 다 빠졌어요. | flat은 탄산이 빠진 상태예요.
+I prefer ___ water to still. | sparkling | 저는 일반 물보다 탄산수를 좋아해요. | sparkling water는 탄산수, still water는 탄산 없는 물이에요.
+This drink is too ___. There's no flavour. | weak/watery | 이 음료는 너무 밍밍해요. 맛이 안 나요. | weak은 커피나 음료가 연한, 밍밍한이라는 뜻이에요. 반대는 strong이에요.
+I like my coffee ___. | strong | 저는 커피를 진하게 마셔요. | strong coffee는 진한 커피예요.
+This salsa has a real ___. | kick | 이 살사 소스 진짜 톡 쏘네요. | have a kick은 매운맛이나 강한 맛이 톡 쏜다는 뜻이에요.
+The cookies smell so good. They're fresh out of the ___. | oven | 쿠키 냄새 정말 좋다. 오븐에서 막 나왔어. | fresh out of the oven은 막 구워 나온이라는 뜻이에요.
+This tastes ___. Is it burnt? | smoky/burnt | 이거 탄 맛이 나요. 탄 거예요? | smoky는 훈연한 듯한 불맛이에요. burnt는 탄 맛이에요.
+I love the ___ flavour of grilled corn. | smoky/charred | 구운 옥수수의 불향이 정말 좋아요. | smoky는 연기 향이 밴 맛이에요. 바비큐 요리에 많이 써요.
+It's a bit of an ___ taste. | acquired | 처음엔 낯설어도 먹다 보면 좋아지는 맛이에요. | an acquired taste는 처음엔 별로지만 익숙해지면 좋아지는 맛이에요.
+This is my ___ food. It always makes me feel better. | comfort | 이건 제 소울 푸드예요. 먹으면 늘 기분이 나아져요. | comfort food는 마음을 편하게 해 주는 익숙한 음식이에요.
+I have a ___ tooth. I can't resist dessert. | sweet | 저는 단 걸 정말 좋아해요. 디저트를 못 참아요. | have a sweet tooth는 단 음식을 좋아한다는 뜻이에요.
+I'm a picky ___. | eater | 저는 입이 좀 까다로워요. | picky eater는 편식하거나 입맛이 까다로운 사람이에요.
+That ___ my appetite. | ruined/killed | 그것 때문에 입맛이 싹 사라졌어요. | ruin one's appetite는 입맛을 떨어뜨리다라는 뜻이에요.
+The smell is making my mouth ___. | water | 냄새 때문에 군침이 돌아요. | make one's mouth water는 군침이 돌게 하다라는 뜻이에요.
+This is ___-watering. | mouth | 이거 정말 군침 돈다. | mouth-watering은 군침이 도는, 아주 맛있어 보이는이라는 뜻이에요.
+This is finger-___ good. | licking/lickin' | 손가락까지 핥고 싶을 만큼 맛있어요. | finger-licking good은 아주 맛있다는 장난스러운 표현이에요.
+I'll have a ___ of fries. | side | 감자튀김 사이드로 하나 주세요. | a side of는 곁들임 메뉴로 하나라는 주문 표현이에요.
+The flavours really ___ well together. | work/go/blend | 맛들이 서로 정말 잘 어울려요. | work well together는 잘 어울리다라는 뜻이에요.
+It's a nice ___ of sweet and salty. | balance/mix | 단맛과 짠맛의 균형이 좋아요. | balance of A and B는 A와 B의 조화라는 뜻이에요.
+The garlic is a bit ___. | overpowering/strong | 마늘 맛이 좀 너무 세요. | overpowering은 다른 맛을 다 덮을 만큼 강한이라는 뜻이에요.
+This tea has a ___ floral note. | delicate/subtle | 이 차는 은은한 꽃향이 나요. | subtle은 은은하고 미묘한이라는 뜻이에요. note는 향의 한 요소예요.
+The wine is a bit too ___ for me. | dry | 이 와인은 저한테 좀 너무 드라이해요. | dry wine은 단맛이 거의 없는 와인이에요. 단 와인은 sweet wine이에요.
+I'd like something ___ and fruity. | sweet/light | 달고 과일 향 나는 걸로 주세요. | fruity는 과일 향이 나는이라는 뜻이에요. 칵테일이나 와인을 고를 때 써요.
+The beer is nice and ___. | crisp/cold | 맥주가 시원하고 깔끔해요. | crisp는 맥주가 깔끔하고 상쾌한 맛이라는 뜻이에요.
+The fish smells a bit ___. | fishy | 생선에서 비린내가 좀 나요. | fishy는 비린내 나는이라는 뜻이에요. 비유적으로 '수상한'이라는 뜻도 있어요.
+Something smells ___ about this deal. | fishy | 이 거래는 뭔가 수상해요. | fishy는 비유적으로 수상하다, 미심쩍다라는 뜻이에요.
+The fabric feels really ___. | soft/smooth | 이 원단 촉감이 정말 부드러워요. | feel + 형용사는 촉감을 말해요. soft는 부드러운, smooth는 매끄러운이에요.
+This sweater is a bit ___. It makes me itch. | scratchy/itchy | 이 스웨터는 좀 까슬까슬해요. 가려워요. | scratchy는 까끌까끌해서 피부를 긁는 느낌이에요.
+The towel is so soft and ___. | fluffy | 수건이 정말 부드럽고 폭신해요. | fluffy는 수건이나 베개가 폭신한 느낌에도 써요.
+The floor is ___. Be careful. | slippery | 바닥이 미끄러워요. 조심하세요. | slippery는 미끄러운이라는 뜻이에요.
+My hands are ___ from the cold. | dry/chapped | 추워서 손이 건조해요. | chapped는 추위나 바람에 피부가 트고 갈라진 상태예요.
+The table is ___. Did someone spill juice? | sticky | 테이블이 끈적끈적해요. 누가 주스 흘렸어요? | sticky는 끈적끈적한이라는 뜻이에요.
+The surface is rough, not ___. | smooth | 표면이 매끄럽지 않고 거칠어요. | smooth는 매끄러운, rough는 거친이라는 뜻이에요.
+The mattress is too ___. I like something softer. | firm/hard | 매트리스가 너무 단단해요. 좀 더 푹신한 게 좋아요. | firm은 단단하고 탄탄한이라는 뜻이에요. 매트리스 고를 때 자주 들어요.
+The bread is soft and ___. | fluffy/airy | 빵이 부드럽고 가벼워요. | airy는 공기가 많이 들어가 가벼운 질감이에요.
+The ice cream is ___ and melting. | soft/runny | 아이스크림이 물러지고 녹고 있어요. | runny는 흐를 정도로 묽은이라는 뜻이에요.
+I like my eggs ___. | runny | 저는 달걀노른자가 흐르는 게 좋아요. | runny yolk는 덜 익어서 흐르는 노른자예요.
+How do you like your eggs? ___ side up, please. | Sunny | 달걀은 어떻게 해 드릴까요? 한쪽만 익혀 주세요. | sunny side up은 한쪽 면만 익혀 노른자가 위로 보이는 달걀 프라이예요.
+I'll have them ___, please. | scrambled | 스크램블로 주세요. | scrambled eggs는 휘저어 익힌 달걀이에요. 북미 아침 식당 단골 주문이에요.

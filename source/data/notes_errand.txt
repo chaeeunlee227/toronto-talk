@@ -1,0 +1,74 @@
+Is the apartment still ___? ||| available은 아직 계약되지 않아 이용 가능하다는 뜻이에요. 집 광고를 보고 처음 연락할 때 써요.
+How much is the ___ a month? ||| rent는 월세예요. a month는 한 달에라는 뜻이에요.
+Are ___ allowed? ||| allowed는 허용된다는 뜻이에요. 반려동물 가능 여부를 물을 때 써요. 가능한 집은 pet-friendly라고 해요.
+Is ___ included? ||| included는 포함된이라는 뜻이에요. 주차 공간이 월세에 포함되는지 물을 때 써요.
+When is the ___-in date? ||| move-in date는 입주 날짜예요. 나가는 날은 move-out date예요.
+I'm ___ out at the end of the month. ||| move out은 이사 나가다, move in은 이사 들어오다예요.
+I'm looking for a ___. ||| roommate는 같은 집에 사는 사람이에요. 집을 나눠 쓸 사람을 구할 때 써요.
+We ___ the rent three ways. ||| split은 나누다라는 뜻이에요. split three ways는 셋이 똑같이 나눈다는 뜻이에요.
+The toilet is ___. ||| clogged는 막힌이라는 뜻이에요. 배수구나 변기가 막혔을 때 써요.
+Could you send someone to ___ it? ||| fix와 repair는 고치다라는 뜻이에요. 집주인이나 관리인에게 수리를 요청할 때 써요.
+There are ___ in the kitchen. ||| mice는 mouse의 복수형이에요. 해충이 나왔다고 관리인에게 알릴 때 써요.
+I locked myself ___. ||| lock oneself out은 열쇠를 안에 두고 문이 잠겨 못 들어간다는 뜻이에요.
+Can I get a spare ___? ||| spare key는 여분 열쇠예요. 집주인에게 하나 더 요청할 때 써요.
+The ___ is too high this month. ||| bill은 요금 청구서예요. 공과금이나 휴대폰 요금이 많이 나왔을 때 써요.
+The internet is ___ again. ||| down은 고장 나서 작동하지 않는다는 뜻이에요. 서비스가 끊겼을 때 써요.
+Have you tried turning it off and on ___? ||| 껐다 켜 봤냐는 질문은 기술 지원에서 가장 먼저 듣는 말이에요. 농담처럼도 많이 써요.
+I'd like to ___ my plan. ||| plan은 휴대폰이나 인터넷 요금제예요. upgrade는 더 좋은 요금제로 바꾼다는 뜻이에요.
+Is there a ___ fee? ||| cancellation fee는 해지나 취소 수수료예요. 계약을 끊기 전에 확인하면 좋아요.
+I'm calling about my ___. ||| 고객센터에 전화해서 용건을 꺼내는 첫마디예요. account는 계정이나 계좌예요.
+Can I speak to a ___? ||| supervisor는 상급자, 책임자예요. 상담원 선에서 해결이 안 될 때 요청해요.
+Can I get a ___ number? ||| reference number는 접수 번호예요. 다음에 다시 문의할 때 필요하니 꼭 받아 두세요.
+I'd like to make a ___. ||| make a complaint는 불만을 제기하다라는 뜻이에요. 공식적으로 항의할 때 써요.
+Where's the nearest ___? ||| ATM은 현금 인출기예요. 북미에서는 cash machine이라고도 해요.
+What's my account ___? ||| balance는 계좌 잔액이에요. 카드 대금 잔액을 말할 때도 써요.
+I'd like to ___ money to Korea. ||| send, transfer, wire 모두 송금하다라는 뜻이에요. wire는 은행 간 전신 송금을 말해요.
+What's the exchange ___? ||| exchange rate는 환율이에요. 환전이나 해외 송금 전에 물어봐요.
+Are there any monthly ___? ||| fees는 수수료예요. 계좌를 만들 때 매달 나가는 비용이 있는지 확인하는 질문이에요.
+I'd like to apply for a credit ___. ||| apply for는 신청하다라는 뜻이에요. 카드, 비자, 일자리 등에 두루 써요.
+I need to build my credit ___. ||| credit history는 신용 기록이에요. 북미에서는 신용 점수가 집 계약이나 대출에 중요해서 자주 이야기해요.
+My card was ___. ||| stolen은 도난당한이라는 뜻이에요. 잃어버렸을 땐 lost를 써요.
+I'd like to ___ my card. ||| block과 cancel은 카드를 정지하다, 해지하다라는 뜻이에요. 분실이나 도난 시 바로 요청해요.
+There's a charge I don't ___. ||| charge는 결제 내역이에요. 모르는 결제가 있다고 부정 사용을 신고할 때 써요.
+I need to pay my ___ card bill. ||| credit card bill은 신용카드 대금이에요. pay off는 전액 갚는다는 뜻이에요.
+Can I set up automatic ___? ||| automatic payments는 자동이체예요. set up은 설정하다라는 뜻이에요.
+What's the interest ___? ||| interest rate는 이자율이에요. 대출이나 적금 상담에서 꼭 물어보는 질문이에요.
+I'm saving up ___ a car. ||| save up for는 ~를 사려고 돈을 모으다라는 뜻이에요.
+I've had a ___ for three days. ||| fever는 열이에요. have had는 며칠째 계속되고 있다는 느낌을 줘요.
+I have a runny ___. ||| runny nose는 콧물이 흐르는 상태예요. 코가 막혔을 땐 stuffy nose라고 해요.
+I've been ___ all night. ||| cough는 기침하다라는 뜻이에요. 증상이 계속되고 있을 때 have been ~ing를 써요.
+I feel ___. ||| dizzy는 어지러운이라는 뜻이에요. 메스꺼울 땐 nauseous라고 해요.
+I think I ___ my ankle. ||| sprain과 twist는 삐다, 접질리다라는 뜻이에요.
+It ___ when I walk. ||| hurt는 아프다라는 뜻이에요. It hurts when~은 어떤 동작을 할 때 아픈지 설명하는 문장이에요.
+On a scale of one to ten, how bad is the ___? ||| 통증 정도를 1에서 10으로 묻는 질문이에요. 북미 병원에서 거의 항상 물어봐요.
+Are you ___ any medication? ||| take medication은 약을 복용하다라는 뜻이에요. be on medication이라고도 해요.
+Do you have any food or drug ___? ||| allergies는 알레르기예요. drug는 여기서 약을 뜻해요.
+Take this twice a ___. ||| twice a day는 하루에 두 번이에요. once a day, three times a day처럼 써요.
+Take it with ___. ||| with food는 음식과 함께, 즉 식후에 먹으라는 뜻이에요. 공복은 on an empty stomach예요.
+Are there any side ___? ||| side effects는 부작용이에요. 약을 받을 때 물어보면 좋아요.
+I need a ___ for that. ||| prescription은 처방전이에요. 처방전 없이 사는 약은 over the counter라고 해요.
+I'm calling in ___ today. ||| call in sick은 아파서 결근한다고 연락하다라는 뜻이에요.
+I need to get my teeth ___. ||| get one's teeth cleaned는 치아 스케일링을 받다라는 뜻이에요.
+I have a ___. ||| toothache는 치통이에요. headache, stomachache처럼 -ache는 통증을 뜻해요.
+I need to go to the ___ room. ||| emergency room은 응급실이에요. 줄여서 ER이라고 해요.
+Call 9-1-1! It's an ___! ||| emergency는 응급 상황이에요. 북미의 경찰·소방·구급 번호는 911이에요.
+I'd like to get a ___ shot. ||| flu shot은 독감 예방주사예요. shot은 주사를 뜻하는 구어 표현이에요.
+Please ___ here. ||| sign은 서명하다라는 뜻이에요. 명사 서명은 signature예요.
+Could you ___ that for me? ||| spell은 철자를 말하다라는 뜻이에요. 이름이나 주소를 받아 적을 때 써요.
+What's your date of ___? ||| date of birth는 생년월일이에요. 서류에서는 DOB로 줄여 써요.
+Can I see some ___? ||| ID는 신분증이에요. 나이 확인이나 본인 확인 때 자주 들어요.
+I need two pieces of ___. ||| piece of ID는 신분증 한 종류를 말해요. 관공서나 은행에서 두 가지 신분증을 요구할 때가 많아요.
+I'd like to ___ a package. ||| send, mail, ship 모두 소포를 보내다라는 뜻이에요. 우체국에서 써요.
+I'm here to pick ___ a package. ||| pick up은 찾아가다라는 뜻이에요. 부재중 택배를 찾으러 갔을 때 써요.
+I need to ___ my address. ||| update나 change one's address는 주소를 변경하다라는 뜻이에요. 이사 후 은행이나 관공서에 알릴 때 써요.
+When is the ___ for this? ||| deadline은 마감일이에요. 서류 제출 기한을 물을 때 써요.
+How long does it ___ to process? ||| process는 처리하다라는 뜻이에요. How long does it take는 얼마나 걸리는지 묻는 기본 표현이에요.
+I need to ___ my appointment. ||| cancel은 취소하다, reschedule은 일정을 바꾸다라는 뜻이에요.
+I'm here for my two o'clock ___. ||| 예약 시간에 도착해서 접수할 때 하는 말이에요. 2시 예약이 있다는 뜻이에요.
+Please take a ___ and wait. ||| take a number는 번호표를 뽑다라는 뜻이에요. 은행이나 관공서에서 들어요.
+I'd like to get a haircut. Just a ___. ||| trim은 길이를 살짝 다듬는 것이에요. 많이 자르지 말라는 뜻으로 써요.
+Not too ___ on the sides. ||| 미용실에서 옆머리를 너무 짧게 자르지 말라고 요청하는 말이에요.
+Can I drop off my ___ cleaning? ||| dry cleaning은 드라이클리닝이에요. drop off는 맡기다, pick up은 찾아가다라는 뜻이에요.
+When will my suit be ___? ||| be ready는 준비되다, 완성되다라는 뜻이에요. 맡긴 물건을 언제 찾으면 되는지 물을 때 써요.
+The garbage ___ is on Thursday. ||| garbage pickup은 쓰레기 수거예요. 북미에서는 동네마다 수거 요일이 정해져 있어요.
+My car broke ___ on the highway. ||| break down은 차나 기계가 고장 나다라는 뜻이에요.
