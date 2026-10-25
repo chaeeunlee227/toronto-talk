@@ -81,7 +81,7 @@ head = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Toronto Talk">
 <meta name="theme-color" content="#eef2f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e161d" media="(prefers-color-scheme: dark)">
@@ -89,7 +89,7 @@ head = """<!doctype html>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 """
-reset = "<style>html{-webkit-text-size-adjust:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n"
+reset = "<style>html{-webkit-text-size-adjust:100%}:root{padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n"
 rest = hosted[title_end:]
 style_end = rest.index("</style>") + len("</style>")
 doc = head + hosted[:title_end] + "\n" + reset + rest[:style_end] + "\n</head>\n<body>\n" + rest[style_end:] + "\n</body>\n</html>\n"

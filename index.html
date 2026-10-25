@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Toronto Talk">
 <meta name="theme-color" content="#eef2f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e161d" media="(prefers-color-scheme: dark)">
@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <title>Toronto Talk</title>
-<style>html{-webkit-text-size-adjust:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>html{-webkit-text-size-adjust:100%}:root{padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -146,10 +146,12 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 .lg-key{font-size:.72rem;color:var(--muted);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
 .btn.mode-toggle{padding:4px 8px;font-size:.8rem;border:1px solid var(--rule)}
 .btn.mode-toggle[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.mic-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 16px;border-radius:12px;border:1.5px dashed var(--accent);background:var(--accent-soft);color:var(--accent);font:inherit;font-weight:700;font-size:.98rem;cursor:pointer}
-.mic-btn.on{border-style:solid;background:var(--accent);color:var(--accent-ink);animation:micpulse 1.2s ease-in-out infinite}
-@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 var(--accent-soft)}50%{box-shadow:0 0 0 8px var(--accent-soft)}}
-.bk-text{width:100%;font:500 .78rem/1.4 var(--mono);padding:8px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);resize:vertical;word-break:break-all}
+.mic-btn{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:7px 14px 7px 11px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:.88rem;cursor:pointer}
+.mic-btn svg{color:var(--accent);width:17px;height:17px}
+.mic-btn.on{border-color:var(--accent);color:var(--accent)}
+.mic-btn.on::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);animation:micdot 1s ease-in-out infinite}
+.mic-btn.on svg{display:none}
+@keyframes micdot{50%{opacity:.25}}
 .qright{display:flex;align-items:center;gap:6px}
 .btn.listen{padding:4px 8px;font-size:.8rem}
 .ko-line{font-size:1.15rem;font-weight:600;line-height:1.55;margin:0;text-wrap:balance}
@@ -511,7 +513,7 @@ let rec=null, listening=false, voiceFlow=false, micEndedAt=0;
 function setMicUI(){
   const b=document.getElementById("micBtn"); if(!b)return;
   b.classList.toggle("on",listening);
-  b.querySelector("span").textContent=listening?"듣는 중… 다시 누르면 멈춰요":"눌러서 말하기";
+  b.querySelector("span").textContent=listening?"듣는 중":"말하기";
 }
 function micMsg(t){const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg");if(m)m.textContent=t}
 function candidateOk(t){
@@ -782,7 +784,7 @@ function buildQuizShell(){
       </div>
       <p class="ko-line" id="qKo"></p>
       <p class="en-line"><span id="qPre"></span><span class="slots" id="slots"><span id="slotView"></span></span><span id="qPost"></span></p>
-      ${canMic?`<button class="mic-btn" id="micBtn" type="button">${MIC_ICON}<span>눌러서 말하기</span></button>`:""}
+      ${canMic?`<button class="mic-btn" id="micBtn" type="button">${MIC_ICON}<span>말하기</span></button>`:""}
       <div class="said" id="said" hidden></div>
       <p class="hint" id="hint" hidden></p>
       <p class="msg" id="msg" aria-live="polite"></p>
