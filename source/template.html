@@ -560,23 +560,33 @@ function toggleListening(){
   if(isBox(document.activeElement))ansEl().blur();   // 키보드는 내려요
   if(sentenceMode()&&!cur.done)resetAttempt();        // 다시 말하면 이번 문장은 새로 인식해요
   listening=true; setMicUI(); micMsg("");
-  // 앞선 인식이 아직 정리 중이면 끝날 때까지 잠깐 기다렸다가 시작해요 (iOS에서 바로 다시 시작하면 오류가 나요)
-  if(rec&&recActive){const old=rec; rec=null; recActive=false; try{old.abort()}catch(e){} setTimeout(()=>{if(listening)beginRec(0)},350)}
-  else beginRec(0);
+  // iOS는 버튼을 누른 그 순간에 시작한 인식만 제대로 받아요. 그래서 기다리지 않고 바로 시작해요.
+  if(rec){const old=rec; rec=null; recActive=false; try{old.abort()}catch(e){}}
+  beginRec(0);
+}
+function endRec(r){
+  clearTimeout(r.__wd);
+  if(rec===r){rec=null;recActive=false;listening=false;micEndedAt=Date.now();setMicUI()}
+  try{r.abort()}catch(e){}
 }
 function beginRec(retry){
   const r=new SR(); rec=r; const t0=Date.now();
+  // 8초 동안 아무것도 못 들으면 '듣는 중'에 멈춰 있지 않게 정리해요
+  r.__wd=setTimeout(()=>{if(rec===r&&!r.__heard){endRec(r);micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.")}},8000);
   r.lang="en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=5;
   r.onresult=e=>{
     if(rec!==r)return;
+    r.__heard=true;
     const res=[...e.results], last=res[res.length-1], head=res.slice(0,-1).map(x=>x[0].transcript).join(" ");
     let text=(head+" "+last[0].transcript).trim();
     if(last.isFinal){
       // 첫 후보가 틀려도 다른 인식 후보 중 정답이 있으면 그걸 써요 (예: "buck"을 "book"으로 들었을 때)
       for(let i=0;i<last.length;i++){const c=(head+" "+last[i].transcript).trim();if(candidateOk(c)){text=c;break}}
     }
+    // 최종 결과를 받으면 인식을 바로 닫아요. 그래야 다음에 누를 때 이전 인식이 남아 있지 않아요.
+    if(last.isFinal)endRec(r);
     applyTranscript(text,last.isFinal);
-    if(cur.done&&!bonusOpen())stopListening();
+    if(cur.done&&!bonusOpen()&&rec)stopListening();
   };
   r.onerror=e=>{
     if(rec!==r)return;
@@ -590,6 +600,7 @@ function beginRec(retry){
     else if(e.error!=="aborted")micMsg(`음성 인식이 잠깐 안 됐어요. 다시 눌러 보세요. (${e.error})`);
   };
   r.onend=()=>{
+    clearTimeout(r.__wd);
     if(rec!==r)return;               // 재시도나 새 시작으로 교체된 인식의 끝은 무시해요
     rec=null; recActive=false; listening=false; micEndedAt=Date.now(); setMicUI();
   };
