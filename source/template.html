@@ -148,6 +148,8 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 .mic-btn.on::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);animation:micdot 1s ease-in-out infinite}
 .mic-btn.on svg{display:none}
 @keyframes micdot{50%{opacity:.25}}
+.voice-sel{flex:1 1 200px;max-width:100%}
+.voice-tip{font-size:.78rem}
 .qright{display:flex;align-items:center;gap:6px}
 .btn.listen{padding:4px 8px;font-size:.8rem}
 .ko-line{font-size:1.15rem;font-weight:600;line-height:1.55;margin:0;text-wrap:balance}
@@ -343,7 +345,7 @@ function laterLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)re
 /* ---------- 저장 (이 브라우저) ---------- */
 const LS="toronto-talk-v1";
 let progress={};   // cardId -> {box,due,hinted,firstSeen,last,seen,updated}
-let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word"};
+let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:""};
 let log=null;      // "YYYY-MM-DD" -> 그날 푼 문제 수
 function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");progress=j.progress||{};if(j.settings)settings=Object.assign(settings,j.settings);log=j.log||null}catch(e){}}
 function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({progress,settings,log}))}catch(e){}}
@@ -466,14 +468,31 @@ const SPEAK_ICON=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" st
 const canSpeak="speechSynthesis" in window;
 // 기기에 있는 영어 음성 중 가장 자연스러운 것을 골라요 (캐나다 > 미국 > 기타 영어, 고음질 음성 우선)
 let voiceCache=null;
-function pickVoice(){
-  if(!canSpeak)return null;
-  const vs=speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
-  if(!vs.length)return null;
+// 효과음 같은 장난 음성(Bells, Bubbles 등)은 목록에서 빼요
+const NOVELTY=/bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|kathy|ralph|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley/i;
+const voiceKey=v=>v.name+"|"+v.lang;
+function englishVoices(){
+  if(!canSpeak)return [];
   const score=v=>(/en[-_]CA/i.test(v.lang)?4:/en[-_]US/i.test(v.lang)?3:1)+(/enhanced|premium|natural|neural/i.test(v.name)?3:0)+(/samantha|google|ava|allison|nathan/i.test(v.name)?1:0);
-  return vs.sort((a,b)=>score(b)-score(a))[0];
+  return speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang)&&!NOVELTY.test(v.name)).sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name));
 }
-if(canSpeak){try{speechSynthesis.onvoiceschanged=()=>{voiceCache=pickVoice()}}catch(e){}}
+const REGION={US:"미국",CA:"캐나다",GB:"영국",AU:"호주",IE:"아일랜드",IN:"인도",ZA:"남아공",NZ:"뉴질랜드",SG:"싱가포르"};
+function voiceLabel(v){
+  const r=(v.lang.split(/[-_]/)[1]||"").toUpperCase();
+  const q=/premium/i.test(v.name)?" · 최고 음질":/enhanced|natural|neural/i.test(v.name)?" · 고음질":"";
+  return `${v.name.replace(/\s*\((enhanced|premium)\)/i,"")} (${REGION[r]||r||"영어"})${q}`;
+}
+function pickVoice(){
+  const vs=englishVoices(); if(!vs.length)return null;
+  if(settings.voice){const v=vs.find(x=>voiceKey(x)===settings.voice);if(v)return v}   // 직접 고른 음성
+  return vs[0];                                                                        // 자동: 가장 자연스러운 음성
+}
+function fillVoiceSelect(){
+  const sel=document.getElementById("voiceSel"); if(!sel)return;
+  const vs=englishVoices();
+  sel.innerHTML=`<option value="">자동 (추천 음성)</option>`+vs.map(v=>`<option value="${esc(voiceKey(v))}" ${voiceKey(v)===settings.voice?"selected":""}>${esc(voiceLabel(v))}</option>`).join("");
+}
+if(canSpeak){try{speechSynthesis.onvoiceschanged=()=>{voiceCache=pickVoice();fillVoiceSelect()}}catch(e){}}
 function utter(text){
   const u=new SpeechSynthesisUtterance(text);
   voiceCache=voiceCache||pickVoice();
@@ -660,7 +679,12 @@ function renderHome(){
         <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
         <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
         <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
-      </div>`:""}
+      </div>
+      <div class="row">
+        <label for="voiceSel" class="small">목소리</label>
+        <select id="voiceSel" class="voice-sel"></select>
+      </div>
+      <p class="small voice-tip">목록에 원하는 목소리가 없으면 아이폰 설정 → 손쉬운 사용 → 읽기 및 말하기 → 음성 → 영어에서 '고음질' 음성을 내려받은 뒤 이 화면을 다시 열어 주세요.</p>`:""}
     </section>
 
     <section class="panel">
@@ -688,6 +712,8 @@ function renderHome(){
     asSel.onchange=e=>{settings.autoSpeak=e.target.value==="1";saveSettings()};
     document.getElementById("speechRate").onchange=e=>{settings.speechRate=+e.target.value;saveSettings()};
     document.getElementById("testVoice").onclick=()=>speak("Let's touch base next week.");
+    fillVoiceSelect();
+    document.getElementById("voiceSel").onchange=e=>{settings.voice=e.target.value;voiceCache=pickVoice();saveSettings();speak("Hi! This is how I sound.")};
   }
   document.getElementById("reset").onclick=()=>{
     document.getElementById("resetBox").innerHTML=`<span>학습 기록과 연속 기록을 모두 지울까요?</span><button class="btn" id="resetYes" style="color:var(--bad)">지우기</button><button class="btn ghost" id="resetNo">취소</button>`;
