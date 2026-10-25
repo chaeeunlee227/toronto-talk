@@ -89,7 +89,7 @@ head = """<!doctype html>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 """
-reset = "<style>html{-webkit-text-size-adjust:100%}:root{padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n"
+reset = "<style>html{-webkit-text-size-adjust:100%}:root{padding-top:calc(env(safe-area-inset-top,0px) + 48px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n"
 rest = hosted[title_end:]
 style_end = rest.index("</style>") + len("</style>")
 doc = head + hosted[:title_end] + "\n" + reset + rest[:style_end] + "\n</head>\n<body>\n" + rest[style_end:] + "\n</body>\n</html>\n"
