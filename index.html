@@ -493,7 +493,13 @@ const voiceKey=v=>v.name+"|"+v.lang;
 function englishVoices(){
   if(!canSpeak)return [];
   const score=v=>(/en[-_]CA/i.test(v.lang)?4:/en[-_]US/i.test(v.lang)?3:1)+(/enhanced|premium|natural|neural/i.test(v.name)?3:0)+(/samantha|google|ava|allison|nathan/i.test(v.name)?1:0);
-  return speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang)&&!NOVELTY.test(v.name)).sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name));
+  const seen=new Map();
+  for(const v of speechSynthesis.getVoices()){
+    if(!/^en[-_]/i.test(v.lang)||NOVELTY.test(v.name))continue;
+    const k=voiceKey(v), old=seen.get(k);
+    if(!old||(v.localService&&!old.localService))seen.set(k,v);   // 같은 음성이 두 번 나오면 기기 안 음성 하나만 남겨요
+  }
+  return [...seen.values()].sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name));
 }
 const REGION={US:"미국",CA:"캐나다",GB:"영국",AU:"호주",IE:"아일랜드",IN:"인도",ZA:"남아공",NZ:"뉴질랜드",SG:"싱가포르"};
 function voiceLabel(v){
@@ -502,6 +508,7 @@ function voiceLabel(v){
   return `${v.name.replace(/\s*\((enhanced|premium)\)/i,"")} (${REGION[r]||r||"영어"})${q}`;
 }
 function pickVoice(){
+  if(settings.voice==="system")return null;            // 기기 기본 음성: iOS가 영어 기본 음성을 고르게 둬요
   const vs=englishVoices(); if(!vs.length)return null;
   if(settings.voice){const v=vs.find(x=>voiceKey(x)===settings.voice);if(v)return v}   // 직접 고른 음성
   return vs[0];                                                                        // 자동: 가장 자연스러운 음성
@@ -509,14 +516,14 @@ function pickVoice(){
 function fillVoiceSelect(){
   const sel=document.getElementById("voiceSel"); if(!sel)return;
   const vs=englishVoices();
-  sel.innerHTML=`<option value="">자동 (추천 음성)</option>`+vs.map(v=>`<option value="${esc(voiceKey(v))}" ${voiceKey(v)===settings.voice?"selected":""}>${esc(voiceLabel(v))}</option>`).join("");
+  sel.innerHTML=`<option value="">자동 (추천 음성)</option><option value="system" ${settings.voice==="system"?"selected":""}>아이폰 기본 영어 음성</option>`+vs.map(v=>`<option value="${esc(voiceKey(v))}" ${voiceKey(v)===settings.voice?"selected":""}>${esc(voiceLabel(v))}</option>`).join("");
 }
 if(canSpeak){try{speechSynthesis.onvoiceschanged=()=>{voiceCache=pickVoice();fillVoiceSelect()}}catch(e){}}
 function utter(text){
   const u=new SpeechSynthesisUtterance(text);
-  voiceCache=voiceCache||pickVoice();
+  voiceCache=settings.voice==="system"?null:(voiceCache||pickVoice());
   if(voiceCache)u.voice=voiceCache;
-  u.lang=voiceCache?voiceCache.lang:"en-CA"; u.rate=settings.speechRate||0.95; u.volume=1;
+  u.lang=voiceCache?voiceCache.lang:(settings.voice==="system"?"en-US":"en-CA"); u.rate=settings.speechRate||0.95; u.volume=1;
   return u;
 }
 function speak(text){if(!canSpeak)return;try{speechSynthesis.cancel();speechSynthesis.speak(utter(text))}catch(e){}}
@@ -703,7 +710,7 @@ function renderHome(){
         <label for="voiceSel" class="small">목소리</label>
         <select id="voiceSel" class="voice-sel"></select>
       </div>
-      <p class="small voice-tip">목록에 원하는 목소리가 없으면 아이폰 설정 → 손쉬운 사용 → 읽기 및 말하기 → 음성 → 영어에서 '고음질' 음성을 내려받은 뒤 이 화면을 다시 열어 주세요.</p>`:""}
+      <p class="small voice-tip">아이폰 정책상 웹페이지에서는 기본 설치된 음성만 쓸 수 있어서, 직접 내려받은 고음질 음성은 목록에 나오지 않아요. '아이폰 기본 영어 음성'을 고르면 기기가 고른 기본 음성으로 읽어요.</p>`:""}
     </section>
 
     <section class="panel">
