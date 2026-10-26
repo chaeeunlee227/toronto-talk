@@ -148,9 +148,15 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 .mic-btn.on::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);animation:micdot 1s ease-in-out infinite}
 .mic-btn.on svg{display:none}
 @keyframes micdot{50%{opacity:.25}}
-.voice-sel{flex:1 1 200px;max-width:100%}
-.voice-tip{font-size:.78rem}
-.chk{display:inline-flex;align-items:center;gap:6px;flex-basis:100%}
+.set-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 14px;align-items:center}
+.set-grid>label{font-size:.88rem;color:var(--muted);white-space:nowrap}
+.set-grid select{width:100%}
+.set-voice{display:flex;gap:8px;min-width:0}
+.set-voice select{flex:1}
+.set-voice .btn{flex:none;color:var(--accent)}
+.voice-tip{font-size:.78rem;color:var(--muted);margin:0}
+.app-foot{text-align:center;font-size:.75rem;color:var(--muted);margin:4px 0 0}
+.linkish{font:inherit;color:inherit;background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .qright{display:flex;align-items:center;gap:6px}
 .btn.listen{padding:4px 8px;font-size:.8rem}
 .ko-line{font-size:1.15rem;font-weight:600;line-height:1.55;margin:0;text-wrap:balance}
@@ -347,12 +353,12 @@ function laterLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)re
 /* ---------- 저장 (이 브라우저) ---------- */
 const LS="toronto-talk-v1";
 let progress={};   // cardId -> {box,due,hinted,firstSeen,last,seen,updated}
-let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:false,micQuietV:3};
+let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:false,micQuietV:4};
 let log=null;      // "YYYY-MM-DD" -> 그날 푼 문제 수
 function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");progress=j.progress||{};if(j.settings)settings=Object.assign(settings,j.settings);log=j.log||null}catch(e){}}
 function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({progress,settings,log}))}catch(e){}}
 // 새로 생긴 노선은 기존 사용자에게도 자동으로 켜기
-function normalizeSettings(){if(settings.micQuietV!==3){settings.micQuiet=false;settings.micQuietV=3}const known=settings.knownLines||[];let changed=false;for(const k of Object.keys(LINES)){if(!known.includes(k)){known.push(k);if(!settings.lines.includes(k))settings.lines.push(k);changed=true}}settings.lines=settings.lines.filter(k=>LINES[k]);if(!settings.lines.length){settings.lines=Object.keys(LINES);changed=true}settings.knownLines=known;return changed}
+function normalizeSettings(){if(settings.micQuietV!==4){settings.micQuiet=false;settings.micQuietV=4}const known=settings.knownLines||[];let changed=false;for(const k of Object.keys(LINES)){if(!known.includes(k)){known.push(k);if(!settings.lines.includes(k))settings.lines.push(k);changed=true}}settings.lines=settings.lines.filter(k=>LINES[k]);if(!settings.lines.length){settings.lines=Object.keys(LINES);changed=true}settings.knownLines=known;return changed}
 // 활동 기록이 없던 이전 버전 사용자는 마지막 학습일로 대략 복원
 function ensureLog(){if(log)return false;log={};for(const s of Object.values(progress)){const k=s.last||s.firstSeen;if(k)log[k]=(log[k]||0)+1}return true}
 function setState(id,st){st.updated=Date.now();progress[id]=st;saveLocal();markDirty("p_"+BY_ID[id].line)}
@@ -824,30 +830,27 @@ function renderHome(){
     </section>
 
     <section class="panel">
-      <p class="label">노선 선택</p>
+      <div class="panel-head"><p class="label">노선 선택</p><span class="small">${settings.lines.length}/${Object.keys(LINES).length}개 노선</span></div>
       <div class="lines" id="lines">
         ${Object.entries(LINES).map(([k,l])=>`<button class="chip" data-line="${k}" aria-pressed="${settings.lines.includes(k)}"><span class="dot" style="background:${l.color}"></span>${l.name}<span class="n">${CARDS.filter(c=>c.line===k).length}</span></button>`).join("")}
       </div>
-      <div class="row">
-        <label for="newPer" class="small">하루 새 표현</label>
+    </section>
+
+    <section class="panel">
+      <p class="label">학습 설정</p>
+      <div class="set-grid">
+        <label for="newPer">하루 새 표현</label>
         <select id="newPer">${[5,10,15,20,30].map(n=>`<option value="${n}" ${n==settings.newPerDay?"selected":""}>${n}개</option>`).join("")}</select>
-      </div>
-      ${canSpeak?`<div class="row">
-        <label for="answerMode" class="small">답하는 방식</label>
+        ${canSpeak?`<label for="answerMode">답하는 방식</label>
         <select id="answerMode"><option value="word" ${settings.answerMode!=="sentence"?"selected":""}>빈칸 단어만</option><option value="sentence" ${settings.answerMode==="sentence"?"selected":""}>문장 전체 말하기</option></select>
+        <label for="autoSpeak">정답 후 읽기</label>
+        <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
+        <label for="speechRate">읽기 속도</label>
+        <select id="speechRate"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
+        <label for="voiceSel">목소리</label>
+        <div class="set-voice"><select id="voiceSel" class="voice-sel"></select><button class="btn small" id="testVoice" aria-label="목소리 들어 보기">${SPEAK_ICON}</button></div>`:""}
       </div>
-      <div class="row">
-        <label for="autoSpeak" class="small">문장 소리</label>
-        <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
-        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label><button class="btn small" id="micLogCopy" type="button">음성 인식 기록 복사</button><span class="small muted">앱 버전 ${BUILD}</span>`:""}
-        <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
-        <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
-      </div>
-      <div class="row">
-        <label for="voiceSel" class="small">목소리</label>
-        <select id="voiceSel" class="voice-sel"></select>
-      </div>
-      <p class="small voice-tip">아이폰 정책상 웹페이지에서는 기본 설치된 음성만 쓸 수 있어서, 직접 내려받은 고음질 음성은 목록에 나오지 않아요. '아이폰 기본 영어 음성'을 고르면 기기가 고른 기본 음성으로 읽어요.</p>`:""}
+      ${canSpeak?`<p class="voice-tip">직접 내려받은 고음질 음성은 아이폰 정책상 웹페이지에서 쓸 수 없어요.</p>`:""}
     </section>
 
     <section class="panel">
@@ -858,6 +861,7 @@ function renderHome(){
     </section>
 
     <div class="confirm" id="resetBox"><button class="btn ghost" id="reset">학습 기록 초기화</button></div>
+    <p class="app-foot">버전 ${BUILD}${canMic?` · <button class="linkish" id="micLogCopy" type="button">음성 인식 기록 복사</button>`:""}</p>
   </div>`;
   const goBtn=document.getElementById("go"); if(goBtn)goBtn.onclick=()=>startSession();
   const more=document.getElementById("more"); if(more)more.onclick=()=>startSession(10);
@@ -874,7 +878,6 @@ function renderHome(){
   if(asSel){
     asSel.onchange=e=>{settings.autoSpeak=e.target.value==="1";saveSettings()};
     document.getElementById("speechRate").onchange=e=>{settings.speechRate=+e.target.value;saveSettings()};
-    const mq=document.getElementById("micQuiet"); if(mq)mq.onchange=e=>{settings.micQuiet=e.target.checked;saveSettings()};
     const mlc=document.getElementById("micLogCopy"); if(mlc)mlc.onclick=()=>copyMicLog(mlc);
     document.getElementById("testVoice").onclick=()=>speak("Let's touch base next week.");
     fillVoiceSelect();
