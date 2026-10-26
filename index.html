@@ -331,6 +331,7 @@ kbd{font:500 .75rem var(--mono);border:1px solid var(--rule);border-bottom-width
 <script>
 // 빌드 대상: false = Claude 아티팩트, true = 직접 호스팅(GitHub Pages)
 const HOSTED=true;
+const BUILD="1025-2215";
 /* ---------- 노선(카테고리) ---------- */
 const LINES = {
   talk:   {name:"일상 회화",     color:"var(--l-talk)"},
@@ -553,7 +554,7 @@ let rec=null, listening=false, voiceFlow=false, micEndedAt=0;
 function setMicUI(){
   const b=document.getElementById("micBtn"); if(!b)return;
   b.classList.toggle("on",listening);
-  b.querySelector("span").textContent=listening?(micWaiting||rec&&rec.__final?"준비 중":"듣는 중"):"말하기";
+  b.querySelector("span").textContent=listening?(micWaiting?"준비 중":"듣는 중"):"말하기";
   if(cur&&!cur.done&&sentenceMode()&&!ansEl().value)renderSaid();
 }
 function micMsg(t){const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg");if(m)m.textContent=t}
@@ -565,12 +566,6 @@ function candidateOk(t){
   else{const allL=[cur.card.answer,...cur.card.alts].map(loose);ok=allL.includes(typedLoose())||spokenMatch(allL)>=0}
   inp.value=keep; return ok;
 }
-function applyTranscript(t,final){
-  ansEl().value=t;
-  if(cur.done){ if(!bonusOpen())return; sentenceMode()?renderSaid():renderBoxes(); checkBonus(); return }
-  if(sentenceMode()){ renderSaid(); if(final)checkSentence(true); return }
-  renderBoxes(); check(final);
-}
 /* 인식을 끝낼 때는 절대 abort()를 쓰지 않아요.
    아이폰 사파리에서 abort()는 시스템 음성 인식 작업을 강제로 취소(cancel)하는데, 정답을 받은 직후처럼
    인식이 스스로 마무리되는 중에 취소하면 그 뒤로 사파리(홈 화면 앱) 전체에서 인식이 아무것도 못 듣게 돼요.
@@ -579,12 +574,10 @@ function applyTranscript(t,final){
    - 직접 끝내야 할 땐 stop()으로 부드럽게 끝내요.
    - 이전 인식이 끝나기 전에 다시 누르면, 끝난 걸 확인한 뒤에 새 인식을 시작해요. */
 let missCount=0, pendingStart=false, afterRecEnd=null, recSeq=0;
-/* 정답이 정해졌을 때: 듣고 있는 인식을 끊지 않고 그냥 놓아 줘요. 아이폰은 말이 끝나면 스스로 인식을 닫아요.
-   (말하는 도중에 stop()으로 끊으면 그 뒤 인식이 고장 났어요) */
+/* 정답이 정해졌을 때: 채점은 말이 끝난 경계에서만 하니까, 여기서 인식을 닫아도 말하는 도중이 아니에요. */
 function releaseListening(){
   pendingStart=false; clearTimeout(startT); micWaiting=false;
-  const r=rec;
-  if(r&&!r.__final){r.__final=true;clearTimeout(r.__wd);clearTimeout(r.__forget);r.__forget=setTimeout(()=>recDone(r),4000);micLog(`#${r.__n} 정답 처리, 인식이 스스로 끝나길 기다림`)}
+  if(rec)gracefulStop(rec);
   listening=false; setMicUI();
 }
 function stopListening(){
@@ -593,10 +586,9 @@ function stopListening(){
   listening=false; setMicUI();
 }
 function gracefulStop(r){
-  clearTimeout(r.__wd);
+  clearTimeout(r.__wd); clearTimeout(r.__pause);
   if(r.__stopping)return;
   r.__stopping=true;
-  if(r.__final){r.__forget=r.__forget||setTimeout(()=>recDone(r),2500);return} // 이미 스스로 끝나는 중이면 건드리지 않아요
   micLog(`#${r.__n} stop() 호출`);
   try{r.stop()}catch(e){}
   // 끝났다는 신호가 끝내 안 오면 이 인식은 잊어요 (abort는 하지 않아요)
@@ -636,7 +628,7 @@ function micLog(t){
   micLogs.push(ts+" "+t); if(micLogs.length>80)micLogs=micLogs.slice(-80);
   try{localStorage.setItem(MICLOG_KEY,JSON.stringify(micLogs))}catch(e){}
 }
-function micLogText(){return `Toronto Talk 음성 인식 기록\n${navigator.userAgent}\nstandalone=${!!(navigator.standalone||matchMedia("(display-mode: standalone)").matches)}\n\n`+micLogs.join("\n")}
+function micLogText(){return `Toronto Talk 음성 인식 기록 (버전 ${BUILD})\n${navigator.userAgent}\nstandalone=${!!(navigator.standalone||matchMedia("(display-mode: standalone)").matches)}\n\n`+micLogs.join("\n")}
 function copyMicLog(btn){
   const t=micLogText();
   const done=()=>{if(btn)btn.textContent="복사했어요"};
@@ -675,51 +667,69 @@ function resumeSaved(){
 function stopSpeech(){try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}}
 function toggleListening(){
   micLog(`말하기 누름 (듣는 중=${listening}, 이전 인식=${rec?rec.__n:"없음"}, 문제 ${session?session.pos+1:"?"})`);
+  // 틀린 뒤 다시 누른 건 '다시 말할게요'라는 뜻이에요. 인식은 끄지 않고 같은 인식으로 계속 들어요.
+  if(listening&&rec&&rec.__awaitRetry&&!cur.done){
+    rec.__awaitRetry=false; rec.__arm(IDLE_MS,false); rec.__consumed=rec.__full||rec.__consumed;
+    if(sentenceMode())resetAttempt(); micMsg("다시 말해 보세요."); setMicUI(); return }
   if(listening){stopListening();return}
   if(!canMic||(cur.done&&!bonusOpen()))return;
   afterRecEnd=null; stopSpeech();
   voiceFlow=true;
   if(isBox(document.activeElement))ansEl().blur();   // 키보드는 내려요
   if(sentenceMode()&&!cur.done)resetAttempt();        // 다시 말하면 이번 문장은 새로 인식해요
+  if(rec&&!rec.__stopping){listening=true;setMicUI();micMsg("");rec.__consumed="";clearTimeout(rec.__pause);rec.__arm(IDLE_MS,false);return} // 열려 있는 인식으로 계속 들어요
   listening=true; setMicUI(); micMsg("");
   // 앞선 인식이 아직 끝나는 중이면, 끝난 다음에 바로 새로 시작해요 (중간에 끊으면 아이폰 인식이 고장 나요)
   if(rec){pendingStart=true;gracefulStop(rec);return}
   startSoon(0);
 }
+/* 한 문제 동안은 인식 하나를 계속 열어 두고(continuous), 다시 말하기도 같은 인식으로 들어요.
+   아이폰은 인식이 끝난 직후 새 인식을 시작하면 소리를 못 받아요(기록으로 확인: audiostart 뒤 아무 결과 없음).
+   말 한 번이 끝난 시점은 iOS의 최종 결과, 또는 1초 동안 새 결과가 없을 때로 봐요. 그때만 채점하고,
+   정답이면 그 경계에서 stop()해요 (말하는 도중에는 끊지 않아요). */
+const PAUSE_MS=1000, FIRST_WAIT_MS=8000, IDLE_MS=20000;
 function beginRec(retry){
   const r=new SR(); rec=r; const t0=Date.now(); r.__n=++recSeq;
+  r.__consumed=""; r.__text="";
   const lg=t=>micLog(`#${r.__n} ${t} +${Date.now()-t0}ms`);
   for(const ev of ["start","audiostart","soundstart","speechstart","speechend","soundend","audioend","nomatch"])r.addEventListener(ev,()=>lg(ev));
-  // 6초 동안 아무것도 못 들으면 '듣는 중'에 멈춰 있지 않게 정리해요
-  r.__wd=setTimeout(()=>{
-    if(rec!==r||r.__heard)return;
-    lg("6초 동안 결과 없음 → stop");
+  // 말을 시작하지 않으면 '듣는 중'에 멈춰 있지 않게 정리해요
+  const arm=(ms,first)=>{clearTimeout(r.__wd);r.__wd=setTimeout(()=>{
+    if(rec!==r)return;
+    lg(first?"8초 동안 결과 없음 → stop":"20초 동안 말이 없음 → stop");
     gracefulStop(r); listening=false; setMicUI();
-    missCount++;
-    if(missCount>=2)showMicStuck();
-    else micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.");
-  },6000);
-  r.lang="en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=5;
+    if(first){missCount++; if(missCount>=2)showMicStuck(); else micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.")}
+    else micMsg("다시 말하려면 말하기 버튼을 눌러 주세요.");
+  },ms)};
+  r.__arm=arm; arm(FIRST_WAIT_MS,true);
+  r.lang="en-US"; r.interimResults=true; r.continuous=true; r.maxAlternatives=5;
   r.onresult=e=>{
-    {const l=e.results[e.results.length-1];lg(`result${l.isFinal?" (최종)":""}: ${l[0].transcript}`)}
-    if(rec!==r||r.__final)return;
-    r.__heard=true; missCount=0; clearTimeout(r.__wd);
-    const res=[...e.results], last=res[res.length-1], head=res.slice(0,-1).map(x=>x[0].transcript).join(" ");
-    let text=(head+" "+last[0].transcript).trim();
-    if(last.isFinal){
+    const all=[...e.results], lastR=all[all.length-1];
+    lg(`result${lastR.isFinal?" (최종)":""}: ${lastR[0].transcript}`);
+    if(rec!==r)return;
+    if(!r.__heard){r.__heard=true;missCount=0}
+    const join=k=>all.map((x,i)=>x[i===all.length-1?k:0].transcript).join(" ").replace(/\s+/g," ").trim();
+    // 이미 채점한 말은 빼고, 이번에 새로 한 말만 봐요 (iOS가 문장을 처음부터 다시 쓰면 그대로 써요)
+    const fresh=t=>{const c=r.__consumed;return c&&t.toLowerCase().startsWith(c.toLowerCase())?t.slice(c.length).trim():t};
+    const text=fresh(join(0));
+    if(!text)return;
+    clearTimeout(r.__pause); r.__awaitRetry=false;
+    if(lastR.isFinal){
       // 첫 후보가 틀려도 다른 인식 후보 중 정답이 있으면 그걸 써요 (예: "buck"을 "book"으로 들었을 때)
-      for(let i=0;i<last.length;i++){const c=(head+" "+last[i].transcript).trim();if(candidateOk(c)){text=c;break}}
-      // 최종 결과 뒤에는 인식이 스스로 끝나요. 끊지 않고 화면만 '말하기'로 돌려 놓아요.
-      r.__final=true; listening=false; setMicUI();
-      r.__forget=setTimeout(()=>recDone(r),2500);
+      let pick=text;
+      for(let i=0;i<lastR.length;i++){const c=fresh(join(i));if(c&&candidateOk(c)){pick=c;break}}
+      utteranceDone(r,pick,true,join(0));
+    }else{
+      showHeard(text);
+      r.__text=text; r.__full=join(0);
+      r.__pause=setTimeout(()=>{if(rec===r)utteranceDone(r,r.__text,false,r.__full)},PAUSE_MS);
+      arm(IDLE_MS,false);
     }
-    applyTranscript(text,last.isFinal);
-    if(cur.done&&!bonusOpen()&&listening)releaseListening();
   };
   r.onerror=e=>{
     lg("error "+e.error+(e.message?" "+e.message:""));
     if(rec!==r)return;
-    clearTimeout(r.__wd);
+    clearTimeout(r.__wd); clearTimeout(r.__pause);
     const quick=Date.now()-t0<1200;
     if(!retry&&quick&&listening&&["audio-capture","network"].includes(e.error)){ // 막 시작했는데 실패하면 끝난 뒤 한 번 더 시도해요
       r.__retry=true;
@@ -732,9 +742,32 @@ function beginRec(retry){
     // 오류 뒤에 끝 신호가 안 올 수도 있어서, 조금 뒤 정리해요
     clearTimeout(r.__forget); r.__forget=setTimeout(()=>recDone(r),800);
   };
-  r.onend=()=>{lg("end");recDone(r)};
+  r.onend=()=>{lg("end");clearTimeout(r.__pause);recDone(r)};
   lg("start() 호출");
   try{r.start()}catch(e){lg("start() 예외 "+e.name);rec=null;listening=false;setMicUI();micMsg("음성 인식을 시작하지 못했어요. 다시 눌러 보세요.")}
+}
+// 말하는 중에는 화면에만 보여 주고 채점하지 않아요
+function showHeard(t){
+  if(cur.done&&!bonusOpen())return;
+  if(sentenceMode()&&!cur.done&&cur.resetNext)resetAttempt();   // 틀린 뒤 다시 말하면 새 문장으로 받아요
+  ansEl().value=t;
+  sentenceMode()?renderSaid():renderBoxes();
+}
+// 말 한 번이 끝났을 때 채점해요
+function utteranceDone(r,text,final,full){
+  clearTimeout(r.__pause);
+  if(cur.done&&!bonusOpen()){r.__consumed=full;return}
+  if(sentenceMode()&&!cur.done&&cur.resetNext)resetAttempt();
+  const wasDone=cur.done, tries=(cur.attempts||[]).length;
+  ansEl().value=text;
+  if(cur.done){ sentenceMode()?renderSaid():renderBoxes(); checkBonus() }
+  else if(sentenceMode()){ renderSaid(); checkSentence(final) }
+  else{ renderBoxes(); check(true) }   // 단어 모드는 말이 멈추면 다 말한 거예요
+  const judged=cur.done!==wasDone||(cur.attempts||[]).length>tries||cur.wasWrong||final;
+  if(judged)r.__consumed=full;
+  if(!cur.done&&rec===r)r.__awaitRetry=true;
+  micLog(`#${r.__n} ${final?"최종":"1초 멈춤"} 채점: "${text}" → ${cur.done?(wasDone?"보너스 처리":"정답"):judged?"틀림, 계속 듣는 중":"아직 말하는 중"}`);
+  if(cur.done&&!bonusOpen()&&rec===r){gracefulStop(r);listening=false;setMicUI()}  // 말이 끝난 경계에서만 닫아요
 }
 
 // 페이지 안 확인 창 (아티팩트에서는 confirm()이 동작하지 않아서 직접 만들어요)
@@ -825,7 +858,7 @@ function renderHome(){
       <div class="row">
         <label for="autoSpeak" class="small">문장 소리</label>
         <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
-        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label><button class="btn small" id="micLogCopy" type="button">음성 인식 기록 복사</button>`:""}
+        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label><button class="btn small" id="micLogCopy" type="button">음성 인식 기록 복사</button><span class="small muted">앱 버전 ${BUILD}</span>`:""}
         <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
         <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
       </div>

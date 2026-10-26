@@ -68,7 +68,9 @@ print("\n".join(problems) or "no problems")
 
 tpl = (ROOT / "template.html").read_text()
 js = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
-page = tpl.replace("/*@@CARDS@@*/", js)
+import datetime
+build_id = datetime.datetime.now().strftime("%m%d-%H%M")
+page = tpl.replace("/*@@CARDS@@*/", js).replace('/*@@BUILD@@*/"dev"', json.dumps(build_id))
 # 1) Claude 아티팩트용 (머리말은 게시할 때 자동으로 붙어요)
 (ROOT.parent / "toronto-talk.html").write_text(page.replace("/*@@HOSTED@@*/false", "false"))
 # 2) GitHub Pages용: 완전한 HTML 문서 + 홈 화면 앱 설정
