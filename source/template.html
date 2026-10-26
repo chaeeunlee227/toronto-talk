@@ -150,6 +150,7 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 @keyframes micdot{50%{opacity:.25}}
 .voice-sel{flex:1 1 200px;max-width:100%}
 .voice-tip{font-size:.78rem}
+.btn.recover{margin-left:6px;padding:4px 10px;font-size:.8rem;color:var(--ink)}
 .chk{display:inline-flex;align-items:center;gap:6px;flex-basis:100%}
 .qright{display:flex;align-items:center;gap:6px}
 .btn.listen{padding:4px 8px;font-size:.8rem}
@@ -346,12 +347,12 @@ function laterLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)re
 /* ---------- 저장 (이 브라우저) ---------- */
 const LS="toronto-talk-v1";
 let progress={};   // cardId -> {box,due,hinted,firstSeen,last,seen,updated}
-let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:false};
+let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:true,micQuietV:2};
 let log=null;      // "YYYY-MM-DD" -> 그날 푼 문제 수
 function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");progress=j.progress||{};if(j.settings)settings=Object.assign(settings,j.settings);log=j.log||null}catch(e){}}
 function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({progress,settings,log}))}catch(e){}}
 // 새로 생긴 노선은 기존 사용자에게도 자동으로 켜기
-function normalizeSettings(){const known=settings.knownLines||[];let changed=false;for(const k of Object.keys(LINES)){if(!known.includes(k)){known.push(k);if(!settings.lines.includes(k))settings.lines.push(k);changed=true}}settings.lines=settings.lines.filter(k=>LINES[k]);if(!settings.lines.length){settings.lines=Object.keys(LINES);changed=true}settings.knownLines=known;return changed}
+function normalizeSettings(){if(settings.micQuietV!==2){settings.micQuiet=true;settings.micQuietV=2}const known=settings.knownLines||[];let changed=false;for(const k of Object.keys(LINES)){if(!known.includes(k)){known.push(k);if(!settings.lines.includes(k))settings.lines.push(k);changed=true}}settings.lines=settings.lines.filter(k=>LINES[k]);if(!settings.lines.length){settings.lines=Object.keys(LINES);changed=true}settings.knownLines=known;return changed}
 // 활동 기록이 없던 이전 버전 사용자는 마지막 학습일로 대략 복원
 function ensureLog(){if(log)return false;log={};for(const s of Object.values(progress)){const k=s.last||s.firstSeen;if(k)log[k]=(log[k]||0)+1}return true}
 function setState(id,st){st.updated=Date.now();progress[id]=st;saveLocal();markDirty("p_"+BY_ID[id].line)}
@@ -554,7 +555,37 @@ function applyTranscript(t,final){
   renderBoxes(); check(final);
 }
 function stopListening(){try{rec&&rec.stop()}catch(e){} if(!rec){listening=false;setMicUI()}}
-let recActive=false;
+let recActive=false, missCount=0;
+/* iOS 음성 인식이 멈추면(소리 재생 뒤 자주 생겨요) 페이지를 새로 불러와야 다시 동작해요.
+   지금 학습 중인 위치를 저장해 두고 새로고침한 뒤 같은 문제로 돌아와요. */
+const RESUME_KEY="toronto-talk-resume";
+function showMicRecover(){
+  const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg"); if(!m)return;
+  m.innerHTML=`아이폰 음성 인식이 멈췄어요. 다시 켜면 이 문제부터 이어서 풀 수 있어요. <button class="btn small recover" id="micRecover">음성 인식 다시 켜기</button>`;
+  document.getElementById("micRecover").onclick=e=>{e.stopPropagation();reloadForMic()};
+}
+function reloadForMic(){
+  try{
+    if(session&&view==="quiz"){
+      // 지금 문제는 아직 안 풀었으면 처음부터, 풀었으면 다음 문제부터
+      const pos=cur&&cur.done?session.pos+1:session.pos;
+      sessionStorage.setItem(RESUME_KEY,JSON.stringify({queue:session.queue,pos,results:session.results,at:Date.now()}));
+    }
+  }catch(e){}
+  saveLocal(); try{flush()}catch(e){}
+  setTimeout(()=>location.reload(),150);
+}
+function resumeAfterReload(){
+  let d=null; try{d=JSON.parse(sessionStorage.getItem(RESUME_KEY)||"null");sessionStorage.removeItem(RESUME_KEY)}catch(e){}
+  if(!d||Date.now()-d.at>10*60*1000)return false;
+  const queue=(d.queue||[]).filter(q=>BY_ID[q.id]);
+  if(d.pos>=queue.length)return false;
+  session={queue,pos:d.pos,results:d.results||{clean:0,hinted:0,revealed:0}};
+  voiceFlow=true;
+  buildQuizShell(); view="quiz"; renderQuiz();
+  const m=document.getElementById("msg"); if(m)m.textContent="음성 인식을 다시 켰어요. 말하기를 눌러 이어서 풀어 보세요.";
+  return true;
+}
 function toggleListening(){
   if(listening){stopListening();return}
   if(!canMic||(cur.done&&!bonusOpen()))return;
@@ -566,13 +597,6 @@ function toggleListening(){
   // iOS는 버튼을 누른 그 순간에 시작한 인식만 제대로 받아요. 그래서 기다리지 않고 바로 시작해요.
   if(rec){const old=rec; rec=null; recActive=false; try{old.abort()}catch(e){}}
   try{speechSynthesis.cancel()}catch(e){}
-  if(audioDirty&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
-    // iOS 버그 대응: 소리를 재생한 뒤에는 음성 인식이 마이크 소리를 못 받는 경우가 있어요.
-    // 마이크를 한 번 직접 열었다 닫으면 오디오가 녹음 가능한 상태로 돌아와요.
-    const go=()=>{if(listening)beginRec(0)};
-    navigator.mediaDevices.getUserMedia({audio:true}).then(st=>{st.getTracks().forEach(t=>t.stop());audioDirty=false;setTimeout(go,120)}).catch(go);
-    return;
-  }
   beginRec(0);
 }
 function endRec(r){
@@ -587,16 +611,15 @@ function beginRec(retry){
   r.__wd=setTimeout(()=>{
     if(rec!==r||r.__heard)return;
     endRec(r);
-    if(r.__afterAudio&&!settings.micQuiet){
-      // 소리 재생 뒤 인식이 멈췄다면, 앞으로 말하기로 답할 때는 자동 읽기를 꺼요
-      settings.micQuiet=true; saveSettings();
-      micMsg("아이폰에서 소리를 재생한 뒤 음성 인식이 멈추는 문제가 있어요. 앞으로 말하기로 답할 때는 예문을 자동으로 읽지 않을게요(듣기 버튼으로는 들을 수 있어요). 말하기를 다시 눌러 주세요.");
-    }else micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.");
-  },7000);
+    missCount++;
+    // 소리를 재생한 뒤이거나 두 번 연속 못 들으면, iOS 음성 인식이 멈춘 상태일 가능성이 커요 → 새로고침 복구를 제안해요
+    if(r.__afterAudio||missCount>=2)showMicRecover();
+    else micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.");
+  },6000);
   r.lang="en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=5;
   r.onresult=e=>{
     if(rec!==r)return;
-    r.__heard=true; audioDirty=false;
+    r.__heard=true; audioDirty=false; missCount=0;
     const res=[...e.results], last=res[res.length-1], head=res.slice(0,-1).map(x=>x[0].transcript).join(" ");
     let text=(head+" "+last[0].transcript).trim();
     if(last.isFinal){
@@ -715,7 +738,7 @@ function renderHome(){
       <div class="row">
         <label for="autoSpeak" class="small">문장 소리</label>
         <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
-        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label>`:""}
+        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기 (아이폰 음성 인식 멈춤 방지)</label>`:""}
         <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
         <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
       </div>
@@ -1575,6 +1598,6 @@ loadLocal();
 const changed=normalizeSettings(), built=ensureLog();
 if(changed||built)saveLocal();
 const startTab=["study","words","stats"].includes(location.hash.slice(1))?location.hash.slice(1):"study";
-go(startTab);
+if(!(HOSTED&&resumeAfterReload()))go(startTab);
 connect().finally(migrateSchedule);
 </script>
