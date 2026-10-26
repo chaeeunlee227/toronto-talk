@@ -527,11 +527,12 @@ function utter(text){
   u.lang=voiceCache?voiceCache.lang:(settings.voice==="system"?"en-US":"en-CA"); u.rate=settings.speechRate||0.95; u.volume=1;
   return u;
 }
-function speak(text){if(!canSpeak)return;try{speechSynthesis.cancel();speechSynthesis.speak(utter(text))}catch(e){}}
+function speak(text){if(!canSpeak)return;try{speechSynthesis.cancel();const u=utter(text);u.onstart=()=>micLog("읽기 시작");u.onend=()=>micLog("읽기 끝");micLog("읽기 요청");speechSynthesis.speak(u)}catch(e){}}
 // 빈칸이 있는 문장: 빈칸 앞을 읽고 잠깐 쉬었다가 뒤를 읽어요
 let blankTimer=null;
 function speakWithBlank(card){
   if(!canSpeak)return;
+  micLog("듣기(빈칸 문장)");
   try{
     speechSynthesis.cancel(); clearTimeout(blankTimer);
     const [pre,post]=card.en.split("___").map(x=>x.trim());
@@ -577,7 +578,7 @@ function applyTranscript(t,final){
    - 최종 결과를 받으면 아무것도 하지 않고 인식이 스스로 끝나기(onend)를 기다려요.
    - 직접 끝내야 할 땐 stop()으로 부드럽게 끝내요.
    - 이전 인식이 끝나기 전에 다시 누르면, 끝난 걸 확인한 뒤에 새 인식을 시작해요. */
-let missCount=0, pendingStart=false, afterRecEnd=null;
+let missCount=0, pendingStart=false, afterRecEnd=null, recSeq=0;
 function stopListening(){
   pendingStart=false;
   if(rec)gracefulStop(rec);
@@ -587,6 +588,7 @@ function gracefulStop(r){
   clearTimeout(r.__wd);
   if(r.__stopping)return;
   r.__stopping=true;
+  micLog(`#${r.__n} stop() 호출`);
   try{r.stop()}catch(e){}
   // 끝났다는 신호가 끝내 안 오면 이 인식은 잊어요 (abort는 하지 않아요)
   r.__forget=setTimeout(()=>recDone(r),2500);
@@ -597,19 +599,38 @@ function recDone(r){
   rec=null; micEndedAt=Date.now();
   if(listening&&(pendingStart||r.__retry)){pendingStart=false;beginRec(r.__retry?1:0);return}
   pendingStart=false; listening=false; setMicUI();
-  const fn=afterRecEnd; afterRecEnd=null;
-  if(fn)setTimeout(fn,300);  // 마이크가 완전히 꺼진 뒤에 소리를 내요
+  runAfterRecEnd();
 }
+function runAfterRecEnd(){clearTimeout(afterRecT);const fn=afterRecEnd;afterRecEnd=null;if(fn)fn()}
 // 인식이 끝난 뒤에 할 일 (예: 정답 문장 읽기). 인식 중이 아니면 바로 해요.
+// 인식이 끝나는 신호가 늦게 와도 0.5초 넘게 기다리지는 않아요
+let afterRecT=null;
 function afterMic(fn){
-  if(rec)afterRecEnd=fn; else setTimeout(fn,300);
+  if(!rec){fn();return}
+  afterRecEnd=fn; clearTimeout(afterRecT); afterRecT=setTimeout(runAfterRecEnd,500);
+}
+/* 음성 인식 기록: 아이폰에서 어디서 멈추는지 보려고 이벤트를 시간과 함께 남겨요 (최근 80개) */
+const MICLOG_KEY="toronto-talk-miclog";
+let micLogs=[]; try{micLogs=JSON.parse(localStorage.getItem(MICLOG_KEY)||"[]")}catch(e){}
+function micLog(t){
+  const d=new Date(), ts=d.toTimeString().slice(0,8)+"."+String(d.getMilliseconds()).padStart(3,"0");
+  micLogs.push(ts+" "+t); if(micLogs.length>80)micLogs=micLogs.slice(-80);
+  try{localStorage.setItem(MICLOG_KEY,JSON.stringify(micLogs))}catch(e){}
+}
+function micLogText(){return `Toronto Talk 음성 인식 기록\n${navigator.userAgent}\nstandalone=${!!(navigator.standalone||matchMedia("(display-mode: standalone)").matches)}\n\n`+micLogs.join("\n")}
+function copyMicLog(btn){
+  const t=micLogText();
+  const done=()=>{if(btn)btn.textContent="복사했어요"};
+  const fallback=()=>{const a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}a.remove()};
+  try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
 }
 const RESUME_KEY="toronto-talk-resume";
 // 인식이 계속 아무것도 못 들으면, 지금 위치를 저장해 두고 앱을 다시 열도록 안내해요
 function showMicStuck(){
   saveResume();
   const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg"); if(!m)return;
-  m.textContent="음성 인식이 소리를 받지 못하고 있어요. 사파리(또는 홈 화면 앱)를 앱 전환 화면에서 위로 밀어 완전히 닫았다가 다시 열어 주세요. 이 문제부터 이어서 풀 수 있어요. 그동안은 직접 입력해서 풀 수 있어요.";
+  m.innerHTML=`음성 인식이 소리를 받지 못하고 있어요. 사파리(또는 홈 화면 앱)를 앱 전환 화면에서 위로 밀어 완전히 닫았다가 다시 열어 주세요. 이 문제부터 이어서 풀 수 있어요. <button class="btn small" id="micLogBtn">기록 복사</button>`;
+  const lb=document.getElementById("micLogBtn"); if(lb)lb.onclick=e=>{e.stopPropagation();copyMicLog(lb)};
 }
 function saveResume(){
   try{
@@ -634,6 +655,7 @@ function resumeSaved(){
 }
 function stopSpeech(){try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}}
 function toggleListening(){
+  micLog(`말하기 누름 (듣는 중=${listening}, 이전 인식=${rec?rec.__n:"없음"}, 문제 ${session?session.pos+1:"?"})`);
   if(listening){stopListening();return}
   if(!canMic||(cur.done&&!bonusOpen()))return;
   afterRecEnd=null; stopSpeech();
@@ -646,10 +668,13 @@ function toggleListening(){
   beginRec(0);
 }
 function beginRec(retry){
-  const r=new SR(); rec=r; const t0=Date.now();
+  const r=new SR(); rec=r; const t0=Date.now(); r.__n=++recSeq;
+  const lg=t=>micLog(`#${r.__n} ${t} +${Date.now()-t0}ms`);
+  for(const ev of ["start","audiostart","soundstart","speechstart","speechend","soundend","audioend","nomatch"])r.addEventListener(ev,()=>lg(ev));
   // 6초 동안 아무것도 못 들으면 '듣는 중'에 멈춰 있지 않게 정리해요
   r.__wd=setTimeout(()=>{
     if(rec!==r||r.__heard)return;
+    lg("6초 동안 결과 없음 → stop");
     gracefulStop(r); listening=false; setMicUI();
     missCount++;
     if(missCount>=2)showMicStuck();
@@ -657,6 +682,7 @@ function beginRec(retry){
   },6000);
   r.lang="en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=5;
   r.onresult=e=>{
+    {const l=e.results[e.results.length-1];lg(`result${l.isFinal?" (최종)":""}: ${l[0].transcript}`)}
     if(rec!==r||r.__final)return;
     r.__heard=true; missCount=0; clearTimeout(r.__wd);
     const res=[...e.results], last=res[res.length-1], head=res.slice(0,-1).map(x=>x[0].transcript).join(" ");
@@ -672,6 +698,7 @@ function beginRec(retry){
     if(cur.done&&!bonusOpen()&&listening)stopListening();
   };
   r.onerror=e=>{
+    lg("error "+e.error+(e.message?" "+e.message:""));
     if(rec!==r)return;
     clearTimeout(r.__wd);
     const quick=Date.now()-t0<1200;
@@ -686,8 +713,9 @@ function beginRec(retry){
     // 오류 뒤에 끝 신호가 안 올 수도 있어서, 조금 뒤 정리해요
     clearTimeout(r.__forget); r.__forget=setTimeout(()=>recDone(r),800);
   };
-  r.onend=()=>recDone(r);
-  try{r.start()}catch(e){rec=null;listening=false;setMicUI();micMsg("음성 인식을 시작하지 못했어요. 다시 눌러 보세요.")}
+  r.onend=()=>{lg("end");recDone(r)};
+  lg("start() 호출");
+  try{r.start()}catch(e){lg("start() 예외 "+e.name);rec=null;listening=false;setMicUI();micMsg("음성 인식을 시작하지 못했어요. 다시 눌러 보세요.")}
 }
 
 // 페이지 안 확인 창 (아티팩트에서는 confirm()이 동작하지 않아서 직접 만들어요)
@@ -778,7 +806,7 @@ function renderHome(){
       <div class="row">
         <label for="autoSpeak" class="small">문장 소리</label>
         <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
-        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label>`:""}
+        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label><button class="btn small" id="micLogCopy" type="button">음성 인식 기록 복사</button>`:""}
         <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
         <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
       </div>
@@ -814,6 +842,7 @@ function renderHome(){
     asSel.onchange=e=>{settings.autoSpeak=e.target.value==="1";saveSettings()};
     document.getElementById("speechRate").onchange=e=>{settings.speechRate=+e.target.value;saveSettings()};
     const mq=document.getElementById("micQuiet"); if(mq)mq.onchange=e=>{settings.micQuiet=e.target.checked;saveSettings()};
+    const mlc=document.getElementById("micLogCopy"); if(mlc)mlc.onclick=()=>copyMicLog(mlc);
     document.getElementById("testVoice").onclick=()=>speak("Let's touch base next week.");
     fillVoiceSelect();
     document.getElementById("voiceSel").onchange=e=>{settings.voice=e.target.value;voiceCache=pickVoice();saveSettings();speak("Hi! This is how I sound.")};
