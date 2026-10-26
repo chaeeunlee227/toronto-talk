@@ -553,7 +553,7 @@ let rec=null, listening=false, voiceFlow=false, micEndedAt=0;
 function setMicUI(){
   const b=document.getElementById("micBtn"); if(!b)return;
   b.classList.toggle("on",listening);
-  b.querySelector("span").textContent=listening?"듣는 중":"말하기";
+  b.querySelector("span").textContent=listening?(micWaiting||rec&&rec.__final?"준비 중":"듣는 중"):"말하기";
   if(cur&&!cur.done&&sentenceMode()&&!ansEl().value)renderSaid();
 }
 function micMsg(t){const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg");if(m)m.textContent=t}
@@ -568,7 +568,11 @@ function candidateOk(t){
 function applyTranscript(t,final){
   ansEl().value=t;
   if(cur.done){ if(!bonusOpen())return; sentenceMode()?renderSaid():renderBoxes(); checkBonus(); return }
-  if(sentenceMode()){ renderSaid(); if(final)checkSentence(true); return }
+  if(sentenceMode()){
+    renderSaid();
+    if(final)checkSentence(true);
+    else{const g=gradeSentence(); if(g.ok&&g.said>=Math.max(2,g.T.length-1))checkSentence(true)} // 문장을 거의 다 말했고 빈칸이 맞으면 바로 정답 처리
+    return }
   renderBoxes(); check(final);
 }
 /* 인식을 끝낼 때는 절대 abort()를 쓰지 않아요.
@@ -580,7 +584,7 @@ function applyTranscript(t,final){
    - 이전 인식이 끝나기 전에 다시 누르면, 끝난 걸 확인한 뒤에 새 인식을 시작해요. */
 let missCount=0, pendingStart=false, afterRecEnd=null, recSeq=0;
 function stopListening(){
-  pendingStart=false;
+  pendingStart=false; clearTimeout(startT); micWaiting=false;
   if(rec)gracefulStop(rec);
   listening=false; setMicUI();
 }
@@ -588,6 +592,7 @@ function gracefulStop(r){
   clearTimeout(r.__wd);
   if(r.__stopping)return;
   r.__stopping=true;
+  if(r.__final){r.__forget=r.__forget||setTimeout(()=>recDone(r),2500);return} // 이미 스스로 끝나는 중이면 건드리지 않아요
   micLog(`#${r.__n} stop() 호출`);
   try{r.stop()}catch(e){}
   // 끝났다는 신호가 끝내 안 오면 이 인식은 잊어요 (abort는 하지 않아요)
@@ -597,17 +602,27 @@ function recDone(r){
   clearTimeout(r.__wd); clearTimeout(r.__forget);
   if(rec!==r)return;
   rec=null; micEndedAt=Date.now();
-  if(listening&&(pendingStart||r.__retry)){pendingStart=false;beginRec(r.__retry?1:0);return}
+  if(listening&&(pendingStart||r.__retry)){pendingStart=false;startSoon(r.__retry?1:0);return}
   pendingStart=false; listening=false; setMicUI();
   runAfterRecEnd();
 }
+/* 아이폰은 앞선 인식이 끝난 직후 곧바로 새 인식을 시작하면 소리를 못 받아요(같은 문제에서 다시 말할 때 멈추던 원인).
+   앞선 인식이 끝나고 RESTART_GAP이 지난 뒤에 시작해요. */
+const RESTART_GAP=1200; let startT=null, micWaiting=false;
+function startSoon(retry){
+  clearTimeout(startT);
+  const w=RESTART_GAP-(Date.now()-micEndedAt);
+  if(w<=0){micWaiting=false;beginRec(retry);return}
+  micWaiting=true; setMicUI(); micLog(`새 인식 ${w}ms 뒤 시작`);
+  startT=setTimeout(()=>{micWaiting=false;if(listening&&!rec)beginRec(retry);else setMicUI()},w);
+}
 function runAfterRecEnd(){clearTimeout(afterRecT);const fn=afterRecEnd;afterRecEnd=null;if(fn)fn()}
 // 인식이 끝난 뒤에 할 일 (예: 정답 문장 읽기). 인식 중이 아니면 바로 해요.
-// 인식이 끝나는 신호가 늦게 와도 0.5초 넘게 기다리지는 않아요
+// 인식이 끝나는 신호가 늦게 와도 0.2초 넘게 기다리지는 않아요
 let afterRecT=null;
 function afterMic(fn){
   if(!rec){fn();return}
-  afterRecEnd=fn; clearTimeout(afterRecT); afterRecT=setTimeout(runAfterRecEnd,500);
+  afterRecEnd=fn; clearTimeout(afterRecT); afterRecT=setTimeout(runAfterRecEnd,200);
 }
 /* 음성 인식 기록: 아이폰에서 어디서 멈추는지 보려고 이벤트를 시간과 함께 남겨요 (최근 80개) */
 const MICLOG_KEY="toronto-talk-miclog";
@@ -665,7 +680,7 @@ function toggleListening(){
   listening=true; setMicUI(); micMsg("");
   // 앞선 인식이 아직 끝나는 중이면, 끝난 다음에 바로 새로 시작해요 (중간에 끊으면 아이폰 인식이 고장 나요)
   if(rec){pendingStart=true;gracefulStop(rec);return}
-  beginRec(0);
+  startSoon(0);
 }
 function beginRec(retry){
   const r=new SR(); rec=r; const t0=Date.now(); r.__n=++recSeq;
