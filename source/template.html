@@ -150,6 +150,7 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 @keyframes micdot{50%{opacity:.25}}
 .voice-sel{flex:1 1 200px;max-width:100%}
 .voice-tip{font-size:.78rem}
+.chk{display:inline-flex;align-items:center;gap:6px;flex-basis:100%}
 .qright{display:flex;align-items:center;gap:6px}
 .btn.listen{padding:4px 8px;font-size:.8rem}
 .ko-line{font-size:1.15rem;font-weight:600;line-height:1.55;margin:0;text-wrap:balance}
@@ -345,7 +346,7 @@ function laterLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)re
 /* ---------- 저장 (이 브라우저) ---------- */
 const LS="toronto-talk-v1";
 let progress={};   // cardId -> {box,due,hinted,firstSeen,last,seen,updated}
-let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:""};
+let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:false};
 let log=null;      // "YYYY-MM-DD" -> 그날 푼 문제 수
 function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");progress=j.progress||{};if(j.settings)settings=Object.assign(settings,j.settings);log=j.log||null}catch(e){}}
 function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({progress,settings,log}))}catch(e){}}
@@ -507,11 +508,13 @@ function utter(text){
   u.lang=voiceCache?voiceCache.lang:(settings.voice==="system"?"en-US":"en-CA"); u.rate=settings.speechRate||0.95; u.volume=1;
   return u;
 }
-function speak(text){if(!canSpeak)return;try{speechSynthesis.cancel();speechSynthesis.speak(utter(text))}catch(e){}}
+let audioDirty=false, lastSpokeAt=0; // 페이지가 소리를 낸 뒤에는 iOS 음성 인식이 멈출 수 있어서 표시해 둬요
+function speak(text){if(!canSpeak)return;audioDirty=true;lastSpokeAt=Date.now();try{speechSynthesis.cancel();speechSynthesis.speak(utter(text))}catch(e){}}
 // 빈칸이 있는 문장: 빈칸 앞을 읽고 잠깐 쉬었다가 뒤를 읽어요
 let blankTimer=null;
 function speakWithBlank(card){
   if(!canSpeak)return;
+  audioDirty=true; lastSpokeAt=Date.now();
   try{
     speechSynthesis.cancel(); clearTimeout(blankTimer);
     const [pre,post]=card.en.split("___").map(x=>x.trim());
@@ -562,6 +565,14 @@ function toggleListening(){
   listening=true; setMicUI(); micMsg("");
   // iOS는 버튼을 누른 그 순간에 시작한 인식만 제대로 받아요. 그래서 기다리지 않고 바로 시작해요.
   if(rec){const old=rec; rec=null; recActive=false; try{old.abort()}catch(e){}}
+  try{speechSynthesis.cancel()}catch(e){}
+  if(audioDirty&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    // iOS 버그 대응: 소리를 재생한 뒤에는 음성 인식이 마이크 소리를 못 받는 경우가 있어요.
+    // 마이크를 한 번 직접 열었다 닫으면 오디오가 녹음 가능한 상태로 돌아와요.
+    const go=()=>{if(listening)beginRec(0)};
+    navigator.mediaDevices.getUserMedia({audio:true}).then(st=>{st.getTracks().forEach(t=>t.stop());audioDirty=false;setTimeout(go,120)}).catch(go);
+    return;
+  }
   beginRec(0);
 }
 function endRec(r){
@@ -572,11 +583,20 @@ function endRec(r){
 function beginRec(retry){
   const r=new SR(); rec=r; const t0=Date.now();
   // 8초 동안 아무것도 못 들으면 '듣는 중'에 멈춰 있지 않게 정리해요
-  r.__wd=setTimeout(()=>{if(rec===r&&!r.__heard){endRec(r);micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.")}},8000);
+  r.__afterAudio=Date.now()-lastSpokeAt<120000;
+  r.__wd=setTimeout(()=>{
+    if(rec!==r||r.__heard)return;
+    endRec(r);
+    if(r.__afterAudio&&!settings.micQuiet){
+      // 소리 재생 뒤 인식이 멈췄다면, 앞으로 말하기로 답할 때는 자동 읽기를 꺼요
+      settings.micQuiet=true; saveSettings();
+      micMsg("아이폰에서 소리를 재생한 뒤 음성 인식이 멈추는 문제가 있어요. 앞으로 말하기로 답할 때는 예문을 자동으로 읽지 않을게요(듣기 버튼으로는 들을 수 있어요). 말하기를 다시 눌러 주세요.");
+    }else micMsg("말소리를 못 들었어요. 말하기 버튼을 다시 누르고 바로 말해 보세요.");
+  },7000);
   r.lang="en-US"; r.interimResults=true; r.continuous=false; r.maxAlternatives=5;
   r.onresult=e=>{
     if(rec!==r)return;
-    r.__heard=true;
+    r.__heard=true; audioDirty=false;
     const res=[...e.results], last=res[res.length-1], head=res.slice(0,-1).map(x=>x[0].transcript).join(" ");
     let text=(head+" "+last[0].transcript).trim();
     if(last.isFinal){
@@ -695,6 +715,7 @@ function renderHome(){
       <div class="row">
         <label for="autoSpeak" class="small">문장 소리</label>
         <select id="autoSpeak"><option value="1" ${settings.autoSpeak?"selected":""}>정답 후 자동으로 읽기</option><option value="0" ${settings.autoSpeak?"":"selected"}>버튼 눌렀을 때만</option></select>
+        ${canMic?`<label class="small chk"><input type="checkbox" id="micQuiet" ${settings.micQuiet?"checked":""}> 말하기로 답할 땐 자동 읽기 끄기</label>`:""}
         <select id="speechRate" aria-label="읽기 속도"><option value="0.95" ${settings.speechRate>=0.9?"selected":""}>보통 속도</option><option value="0.75" ${settings.speechRate<0.9?"selected":""}>느리게</option></select>
         <button class="btn small" id="testVoice">${SPEAK_ICON}들어 보기</button>
       </div>
@@ -729,6 +750,7 @@ function renderHome(){
   if(asSel){
     asSel.onchange=e=>{settings.autoSpeak=e.target.value==="1";saveSettings()};
     document.getElementById("speechRate").onchange=e=>{settings.speechRate=+e.target.value;saveSettings()};
+    const mq=document.getElementById("micQuiet"); if(mq)mq.onchange=e=>{settings.micQuiet=e.target.checked;saveSettings()};
     document.getElementById("testVoice").onclick=()=>speak("Let's touch base next week.");
     fillVoiceSelect();
     document.getElementById("voiceSel").onchange=e=>{settings.voice=e.target.value;voiceCache=pickVoice();saveSettings();speak("Hi! This is how I sound.")};
@@ -1234,7 +1256,7 @@ function finish(result){
   if(listening)stopListening();
   if(settings.autoSpeak&&canSpeak){
     if(canMic&&(listening||Date.now()-micEndedAt<1500)){
-      setTimeout(()=>speak(full),700); // 마이크가 꺼진 뒤 소리가 크게 나오도록 잠깐 기다려요
+      if(!settings.micQuiet)setTimeout(()=>speak(full),700); // 마이크가 꺼진 뒤 소리가 크게 나오도록 잠깐 기다려요
     }else if(sentenceMode()&&isBox(document.activeElement)){
       // 받아쓰기 마이크가 켜져 있으면 iOS가 소리를 통화 모드처럼 작게 내요.
       // 그래서 문장 모드에서는 키보드를 내려 마이크를 끈 뒤, 잠깐 기다렸다가 읽어요.
