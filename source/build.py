@@ -71,9 +71,9 @@ js = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
 import datetime
 build_id = datetime.datetime.now().strftime("%m%d-%H%M")
 page = tpl.replace("/*@@CARDS@@*/", js).replace('/*@@BUILD@@*/"dev"', json.dumps(build_id))
-# 1) Claude 아티팩트용 (머리말은 게시할 때 자동으로 붙어요)
+# 1) For the Claude artifact (the document header is added automatically on publish)
 (ROOT.parent / "toronto-talk.html").write_text(page.replace("/*@@HOSTED@@*/false", "false"))
-# 2) GitHub Pages용: 완전한 HTML 문서 + 홈 화면 앱 설정
+# 2) For GitHub Pages: a full HTML document + home-screen app settings
 hosted = page.replace("/*@@HOSTED@@*/false", "true")
 title_end = hosted.index("</title>") + len("</title>")
 head = """<!doctype html>

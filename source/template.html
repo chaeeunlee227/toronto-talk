@@ -161,7 +161,7 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 .btn.listen{padding:4px 8px;font-size:.8rem}
 .ko-line{font-size:1.15rem;font-weight:600;line-height:1.55;margin:0;text-wrap:balance}
 .en-line{font-size:1.2rem;line-height:2.1;margin:0;overflow-wrap:anywhere}
-/* 빈칸 = 두 역 사이의 선로: 얇은 2px 선 양 끝에 작은 역 점 */
+/* Blank = the track between two stations: a thin 2px line with a small station dot at each end */
 .slot{--slot:var(--muted);position:relative;display:inline-block;margin:0 6px;vertical-align:baseline;max-width:100%}
 .slot::before,.slot::after{content:"";position:absolute;bottom:-2px;width:7px;height:7px;border-radius:50%;background:var(--surface);border:2px solid var(--slot);box-sizing:border-box;transition:border-color .2s,background .2s}
 .slot::before{left:-5px}.slot::after{right:-5px}
@@ -173,12 +173,12 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 .slots.focused .slot.active .blank::after{content:"";display:inline-block;width:2px;height:1.05em;margin-left:1px;vertical-align:-.15em;background:var(--accent);animation:caret 1s steps(1) infinite}
 .slots.focused .slot.active .blank.ph::after{margin-left:-2px}
 @keyframes caret{50%{opacity:0}}
-/* 실제 입력칸: 16px 이상이어야 iOS가 확대하지 않아요. 보이지 않게 칸 위에 겹쳐 둬요 */
-/* 실제 입력칸은 카드 아래 빈 공간에 숨겨 둬요. iOS 받아쓰기 막대가 입력칸 근처에 뜨기 때문에,
-   이렇게 하면 막대가 문장이나 결과를 가리지 않아요. 터치는 막고(pointer-events) 빈칸·문장 상자를 누르면 포커스를 줘요. */
-/* 실제 입력칸은 화면 맨 위(제목 자리)에 겹쳐 숨겨 둬요.
-   iOS는 입력칸이 보이도록 스크롤하고, 받아쓰기 막대도 입력칸 근처에 띄우기 때문에
-   맨 위에 두면 화면이 아래로 끌려 내려가지 않고 막대도 문제 카드를 가리지 않아요. */
+/* The real input: must be 16px or larger so iOS doesn't zoom. It's overlaid invisibly on the slots */
+/* The real input is hidden in the empty space below the card. The iOS dictation bar appears near the input,
+   so this keeps the bar from covering the sentence or results. Touches are blocked (pointer-events); tapping a blank or the sentence box focuses it. */
+/* The real input is hidden, overlaid at the very top of the screen (where the title is).
+   iOS scrolls to keep the input visible and shows the dictation bar near the input,
+   so placing it at the top keeps the page from being dragged down and the bar off the question card. */
 .input-dock{position:relative;height:0;margin-bottom:-12px}
 .answer-input{position:absolute;left:0;top:-44px;width:60%;height:24px;pointer-events:none;opacity:0;font-size:18px;border:0;padding:0;margin:0;background:transparent;color:transparent;caret-color:transparent;-webkit-appearance:none;appearance:none;z-index:1}
 .answer-input::-webkit-search-cancel-button,.answer-input::-webkit-search-decoration{-webkit-appearance:none;display:none}
@@ -235,7 +235,7 @@ select,.search{font:inherit;font-size:.92rem;padding:8px 10px;border-radius:10px
 kbd{font:500 .75rem var(--mono);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 4px;color:var(--muted)}
 .keys{font-size:.78rem;color:var(--muted);margin:0}
 
-/* 단어장 */
+/* Word list */
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button{border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.84rem;font-weight:600;color:var(--muted)}
 .seg button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--surface)}
@@ -258,7 +258,7 @@ kbd{font:500 .75rem var(--mono);border:1px solid var(--rule);border-bottom-width
 .pill.mastered{background:var(--ok-soft);color:var(--ok)}
 .empty{padding:24px 8px;text-align:center;color:var(--muted);font-size:.92rem;margin:0}
 
-/* 대시보드 */
+/* Dashboard */
 .big-streak{display:flex;align-items:baseline;gap:8px}
 .big-streak b{font-family:var(--display);font-stretch:85%;font-weight:800;font-size:3.6rem;line-height:.9;color:var(--accent);font-variant-numeric:tabular-nums}
 .big-streak span{font-weight:600}
@@ -316,10 +316,10 @@ kbd{font:500 .75rem var(--mono);border:1px solid var(--rule);border-bottom-width
 </div>
 
 <script>
-// 빌드 대상: false = Claude 아티팩트, true = 직접 호스팅(GitHub Pages)
+// Build target: false = Claude artifact, true = self-hosted (GitHub Pages)
 const HOSTED=/*@@HOSTED@@*/false;
 const BUILD=/*@@BUILD@@*/"dev";
-/* ---------- 노선(카테고리) ---------- */
+/* ---------- Lines (categories) ---------- */
 const LINES = {
   talk:   {name:"일상 회화",     color:"var(--l-talk)"},
   feel:   {name:"감정·관계",     color:"var(--l-feel)"},
@@ -333,12 +333,12 @@ const LINES = {
   color:  {name:"색·꽃·자연",    color:"var(--l-color)"},
   taste:  {name:"맛·질감",       color:"var(--l-taste)"}
 };
-// [id, line, 영어(___ = 빈칸), 정답, 한국어 해석, 설명, 대체 정답]
+// [id, line, English (___ = blank), answer, Korean translation, note, alternative answers]
 const RAW = /*@@CARDS@@*/;
 const CARDS = RAW.filter(r=>LINES[r[1]]).map(([id,line,en,answer,ko,note,alts])=>({id,line,en,answer,ko,note,alts:alts||[]}));
 const BY_ID = Object.fromEntries(CARDS.map(c=>[c.id,c]));
 
-/* ---------- 날짜 ---------- */
+/* ---------- Dates ---------- */
 function dayKey(d=new Date()){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
 function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return dayKey(d)}
 function dayDiff(key){const [y,m,d]=key.split("-").map(Number);const a=new Date(y,m-1,d,12);const b=new Date();b.setHours(12,0,0,0);return Math.round((a-b)/864e5)}
@@ -346,26 +346,26 @@ function whenLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)ret
 function md(key){const [,m,d]=key.split("-").map(Number);return m+"/"+d}
 const WD=["일","월","화","수","목","금","토"];
 function weekday(key){const [y,m,d]=key.split("-").map(Number);return WD[new Date(y,m-1,d,12).getDay()]}
-const INTERVALS=[1,1,3,7,14,30]; // 이전 버전(box) 기록을 읽을 때만 써요
+const INTERVALS=[1,1,3,7,14,30]; // Only used when reading records from the old (box) version
 function addDaysFrom(key,n){const [y,m,d]=key.split("-").map(Number);return dayKey(new Date(y,m-1,d+n,12))}
 function laterLabel(key){const n=dayDiff(key);if(n<=0)return"오늘";if(n===1)return"내일";const [,m,d]=key.split("-").map(Number);return `${n}일 뒤 (${m}월 ${d}일)`}
 
-/* ---------- 저장 (이 브라우저) ---------- */
+/* ---------- Storage (this browser) ---------- */
 const LS="toronto-talk-v1";
 let progress={};   // cardId -> {box,due,hinted,firstSeen,last,seen,updated}
 let settings={newPerDay:10,lines:Object.keys(LINES),autoSpeak:true,speechRate:0.95,answerMode:"word",voice:"",micQuiet:false,micQuietV:4};
-let log=null;      // "YYYY-MM-DD" -> 그날 푼 문제 수
+let log=null;      // "YYYY-MM-DD" -> number of questions answered that day
 function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LS)||"{}");progress=j.progress||{};if(j.settings)settings=Object.assign(settings,j.settings);log=j.log||null}catch(e){}}
 function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({progress,settings,log}))}catch(e){}}
-// 새로 생긴 노선은 기존 사용자에게도 자동으로 켜기
+// Automatically enable newly added lines for existing users too
 function normalizeSettings(){if(settings.micQuietV!==4){settings.micQuiet=false;settings.micQuietV=4}const known=settings.knownLines||[];let changed=false;for(const k of Object.keys(LINES)){if(!known.includes(k)){known.push(k);if(!settings.lines.includes(k))settings.lines.push(k);changed=true}}settings.lines=settings.lines.filter(k=>LINES[k]);if(!settings.lines.length){settings.lines=Object.keys(LINES);changed=true}settings.knownLines=known;return changed}
-// 활동 기록이 없던 이전 버전 사용자는 마지막 학습일로 대략 복원
+// For users of older versions without an activity log, roughly restore it from the last study date
 function ensureLog(){if(log)return false;log={};for(const s of Object.values(progress)){const k=s.last||s.firstSeen;if(k)log[k]=(log[k]||0)+1}return true}
 function setState(id,st){st.updated=Date.now();progress[id]=st;saveLocal();markDirty("p_"+BY_ID[id].line)}
 function saveSettings(){settings.updated=Date.now();saveLocal();markDirty("meta")}
 
-/* ---------- 계정 저장 (Claude 계정, 기기 간 동기화) ----------
-   노선별 문서 9개(p_노선)에 카드 상태를, meta 문서에 설정과 날짜별 기록을 둬요. */
+/* ---------- Account storage (Claude account, sync across devices) ----------
+   Card state lives in one document per line (p_<line>); settings and the daily log live in the meta document. */
 let col=null; const dirty=new Set(); let flushTimer=null; const chains={};
 function setSync(on,text){const el=document.getElementById("sync");el.classList.toggle("on",on);el.querySelector("span").textContent=text}
 function docBody(name){
@@ -383,7 +383,7 @@ function flush(){
     chains[name]=(chains[name]||Promise.resolve()).then(()=>col.doc(name).set(body)).then(()=>setSync(true,"계정에 저장됨")).catch(()=>{setSync(false,"계정 저장 실패 · 이 브라우저에 저장 중");dirty.add(name)});
   }
 }
-// 앱을 잠시 나갔다 온 시간은 풀이 시간에서 빼요
+// Time spent away from the app is subtracted from the answer time
 document.addEventListener("visibilitychange",()=>{
   if(!cur||cur.done)return;
   if(document.visibilityState==="hidden")cur.hiddenAt=performance.now();
@@ -400,12 +400,12 @@ async function connect(){
     const snap=await c.get();
     const remote={}; snap.docs.forEach(d=>{if(d.exists)remote[d.id]=d.data()});
     const toPush=new Set();
-    // 카드 상태: 더 최근에 바뀐 쪽을 사용
+    // Card state: use whichever side changed more recently
     const remoteCards={};
     for(const [k,v] of Object.entries(remote))if(k.startsWith("p_")&&v&&v.cards)Object.assign(remoteCards,v.cards);
     for(const [id,v] of Object.entries(remoteCards)){if(!BY_ID[id])continue;const cur=progress[id];if(!cur||(v.updated||0)>(cur.updated||0))progress[id]={...v}}
     for(const [id,v] of Object.entries(progress)){if(!BY_ID[id])continue;const r=remoteCards[id];if(!r||(v.updated||0)>(r.updated||0))toPush.add("p_"+BY_ID[id].line)}
-    // 설정과 날짜별 기록
+    // Settings and daily log
     const meta=remote.meta||{};
     if(meta.settings&&(meta.settings.updated||0)>(settings.updated||0))settings=Object.assign({},settings,meta.settings);
     const mergedLog={...(meta.log||{})};
@@ -421,9 +421,9 @@ async function connect(){
   }catch(e){setSync(false,"계정에 연결하지 못했어요 · 이 브라우저에 저장 중")}
 }
 
-/* ---------- 복습 간격 개편(v2) 1회 적용 ----------
-   힌트 없이 맞혀 둔 표현의 간격을 1.75배로 늘리고, 마지막으로 푼 날 기준으로 다음 복습일을 다시 잡아요.
-   계정 기록과 합친 뒤에 한 번만 실행해서, 다른 기기의 최신 기록을 덮어쓰지 않아요. */
+/* ---------- One-time migration to the revised review intervals (v2) ----------
+   Multiplies the interval of expressions answered without hints by 1.75 and reschedules the next review from the last study day.
+   Runs only once, after merging with the account records, so it doesn't overwrite newer records from other devices. */
 function migrateSchedule(){
   if((settings.schedV||1)>=2)return;
   const t=dayKey(); let n=0;
@@ -439,13 +439,13 @@ function migrateSchedule(){
   if(n&&view!=="quiz")go(view==="done"?"study":view);
 }
 
-/* ---------- 상태 계산 ---------- */
+/* ---------- Computing state ---------- */
 function cardIvl(s){return s.ivl!=null?s.ivl:INTERVALS[s.box||0]}
 function status(id){const s=progress[id];if(!s)return"new";if(s.hinted)return"again";return cardIvl(s)>=7?"mastered":"learning"}
 const STATUS={again:"다시 볼 표현",learning:"학습 중",mastered:"익힌 표현",new:"새 표현"};
 function streakInfo(){
   const t=dayKey(), has=k=>(log[k]||0)>0;
-  let cur=0,i=has(t)?0:1; // 오늘 아직 안 했으면 어제부터 셈
+  let cur=0,i=has(t)?0:1; // If nothing done today yet, count from yesterday
   while(has(addDays(-i-cur)))cur++;
   const days=Object.keys(log).filter(has).sort();
   let best=0,run=0,prev=null;
@@ -459,7 +459,7 @@ function renderBadge(){
   b.title=s.todayDone?"오늘 학습 완료":s.cur?"오늘 학습하면 연속 기록이 이어져요":"오늘 학습을 시작해 보세요";
 }
 
-/* ---------- 학습 큐 ---------- */
+/* ---------- Study queue ---------- */
 function activeCards(){return CARDS.filter(c=>settings.lines.includes(c.line))}
 function dueCards(){const t=dayKey();return activeCards().filter(c=>progress[c.id]&&progress[c.id].due<=t).sort((a,b)=>progress[a.id].due.localeCompare(progress[b.id].due))}
 function newToday(){const t=dayKey();return Object.entries(progress).filter(([id,s])=>BY_ID[id]&&s.firstSeen===t).length}
@@ -467,16 +467,16 @@ function unseen(){return activeCards().filter(c=>!progress[c.id])}
 function newSlots(){return Math.max(0,Math.min(settings.newPerDay-newToday(),unseen().length))}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
-/* ---------- 공통 ---------- */
+/* ---------- Common ---------- */
 let view="study", session=null;
 const app=document.getElementById("app");
 const esc=s=>String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const norm=s=>s.toLowerCase().replace(/[’‘`]/g,"'").replace(/\s+/g," ").trim();
 const SPEAK_ICON=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>`;
 const canSpeak="speechSynthesis" in window;
-// 기기에 있는 영어 음성 중 가장 자연스러운 것을 골라요 (캐나다 > 미국 > 기타 영어, 고음질 음성 우선)
+// Pick the most natural English voice on the device (Canadian > US > other English, high-quality voices first)
 let voiceCache=null;
-// 효과음 같은 장난 음성(Bells, Bubbles 등)은 목록에서 빼요
+// Drop novelty voices that are basically sound effects (Bells, Bubbles, etc.)
 const NOVELTY=/bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|kathy|ralph|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley/i;
 const voiceKey=v=>v.name+"|"+v.lang;
 function englishVoices(){
@@ -486,7 +486,7 @@ function englishVoices(){
   for(const v of speechSynthesis.getVoices()){
     if(!/^en[-_]/i.test(v.lang)||NOVELTY.test(v.name))continue;
     const k=voiceKey(v), old=seen.get(k);
-    if(!old||(v.localService&&!old.localService))seen.set(k,v);   // 같은 음성이 두 번 나오면 기기 안 음성 하나만 남겨요
+    if(!old||(v.localService&&!old.localService))seen.set(k,v);   // If the same voice appears twice, keep only the on-device one
   }
   return [...seen.values()].sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name));
 }
@@ -497,10 +497,10 @@ function voiceLabel(v){
   return `${v.name.replace(/\s*\((enhanced|premium)\)/i,"")} (${REGION[r]||r||"영어"})${q}`;
 }
 function pickVoice(){
-  if(settings.voice==="system")return null;            // 기기 기본 음성: iOS가 영어 기본 음성을 고르게 둬요
+  if(settings.voice==="system")return null;            // Device default voice: let iOS pick its default English voice
   const vs=englishVoices(); if(!vs.length)return null;
-  if(settings.voice){const v=vs.find(x=>voiceKey(x)===settings.voice);if(v)return v}   // 직접 고른 음성
-  return vs[0];                                                                        // 자동: 가장 자연스러운 음성
+  if(settings.voice){const v=vs.find(x=>voiceKey(x)===settings.voice);if(v)return v}   // Voice the user picked
+  return vs[0];                                                                        // Auto: the most natural voice
 }
 function fillVoiceSelect(){
   const sel=document.getElementById("voiceSel"); if(!sel)return;
@@ -516,7 +516,7 @@ function utter(text){
   return u;
 }
 function speak(text){if(!canSpeak)return;try{speechSynthesis.cancel();const u=utter(text);u.onstart=()=>micLog("읽기 시작");u.onend=()=>micLog("읽기 끝");micLog("읽기 요청");speechSynthesis.speak(u)}catch(e){}}
-// 빈칸이 있는 문장: 빈칸 앞을 읽고 잠깐 쉬었다가 뒤를 읽어요
+// Sentence with a blank: read the part before the blank, pause briefly, then read the rest
 let blankTimer=null;
 function speakWithBlank(card){
   if(!canSpeak)return;
@@ -531,9 +531,9 @@ function speakWithBlank(card){
 }
 const fullSentence=c=>c.en.replace("___",c.answer);
 
-/* ---------- 페이지 안 마이크 (직접 호스팅한 버전에서만) ----------
-   Claude 아티팩트 안에서는 마이크가 막혀 있어서, GitHub Pages처럼 직접 올린 페이지에서만 버튼을 보여 줘요.
-   브라우저 음성 인식(Web Speech API)을 쓰고, 인식 후보 여러 개 중 정답과 맞는 것을 골라요. */
+/* ---------- In-page microphone (self-hosted build only) ----------
+   The microphone is blocked inside Claude artifacts, so the button is only shown on self-hosted pages such as GitHub Pages.
+   Uses browser speech recognition (Web Speech API) and picks whichever of the recognition alternatives matches the answer. */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 const canMic=HOSTED&&!!SR;
 const MIC_ICON=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>`;
@@ -553,15 +553,15 @@ function candidateOk(t){
   else{const allL=[cur.card.answer,...cur.card.alts].map(loose);ok=allL.includes(typedLoose())||spokenMatch(allL)>=0}
   inp.value=keep; return ok;
 }
-/* 인식을 끝낼 때는 절대 abort()를 쓰지 않아요.
-   아이폰 사파리에서 abort()는 시스템 음성 인식 작업을 강제로 취소(cancel)하는데, 정답을 받은 직후처럼
-   인식이 스스로 마무리되는 중에 취소하면 그 뒤로 사파리(홈 화면 앱) 전체에서 인식이 아무것도 못 듣게 돼요.
-   이 상태는 페이지를 새로고침해도 풀리지 않아요. 그래서:
-   - 최종 결과를 받으면 아무것도 하지 않고 인식이 스스로 끝나기(onend)를 기다려요.
-   - 직접 끝내야 할 땐 stop()으로 부드럽게 끝내요.
-   - 이전 인식이 끝나기 전에 다시 누르면, 끝난 걸 확인한 뒤에 새 인식을 시작해요. */
+/* Never use abort() to end recognition.
+   In iPhone Safari, abort() force-cancels the system speech recognition task. If it's cancelled while recognition is
+   wrapping up on its own (e.g. right after receiving the answer), recognition in all of Safari (and the home-screen app) stops hearing anything afterwards.
+   Reloading the page doesn't fix this state. So:
+   - On a final result, do nothing and wait for recognition to end on its own (onend).
+   - When we have to end it ourselves, end it gently with stop().
+   - If the button is pressed again before the previous recognition ends, start the new one only after confirming it ended. */
 let missCount=0, pendingStart=false, afterRecEnd=null, recSeq=0;
-/* 정답이 정해졌을 때: 채점은 말이 끝난 경계에서만 하니까, 여기서 인식을 닫아도 말하는 도중이 아니에요. */
+/* When the answer is settled: grading only happens at the end of an utterance, so closing recognition here never cuts off speech. */
 function releaseListening(){
   pendingStart=false; clearTimeout(startT); micWaiting=false;
   if(rec)gracefulStop(rec);
@@ -578,7 +578,7 @@ function gracefulStop(r){
   r.__stopping=true;
   micLog(`#${r.__n} stop() 호출`);
   try{r.stop()}catch(e){}
-  // 끝났다는 신호가 끝내 안 오면 이 인식은 잊어요 (abort는 하지 않아요)
+  // If the end signal never arrives, forget this recognition (without calling abort)
   r.__forget=setTimeout(()=>recDone(r),2500);
 }
 function recDone(r){
@@ -589,8 +589,8 @@ function recDone(r){
   pendingStart=false; listening=false; setMicUI();
   runAfterRecEnd();
 }
-/* 아이폰은 앞선 인식이 끝난 직후 곧바로 새 인식을 시작하면 소리를 못 받아요(같은 문제에서 다시 말할 때 멈추던 원인).
-   앞선 인식이 끝나고 RESTART_GAP이 지난 뒤에 시작해요. */
+/* On iPhone, starting a new recognition right after the previous one ends hears no audio (the cause of the freeze when speaking again on the same question).
+   Start only after RESTART_GAP has passed since the previous recognition ended. */
 const RESTART_GAP=1200; let startT=null, micWaiting=false;
 function startSoon(retry){
   clearTimeout(startT);
@@ -600,14 +600,14 @@ function startSoon(retry){
   startT=setTimeout(()=>{micWaiting=false;if(listening&&!rec)beginRec(retry);else setMicUI()},w);
 }
 function runAfterRecEnd(){clearTimeout(afterRecT);const fn=afterRecEnd;afterRecEnd=null;if(fn)fn()}
-// 인식이 끝난 뒤에 할 일 (예: 정답 문장 읽기). 인식 중이 아니면 바로 해요.
-// 마이크가 열려 있는 동안 소리를 내면 아이폰 인식이 고장 나요. 인식이 정말 끝난(onend) 순간에 바로 읽어요.
+// Work to do after recognition ends (e.g. reading the answer sentence aloud). If not recognizing, do it right away.
+// Playing sound while the mic is open breaks iPhone recognition. Read aloud the moment recognition has truly ended (onend).
 let afterRecT=null;
 function afterMic(fn){
   if(!rec){fn();return}
   afterRecEnd=fn;
 }
-/* 음성 인식 기록: 아이폰에서 어디서 멈추는지 보려고 이벤트를 시간과 함께 남겨요 (최근 80개) */
+/* Speech recognition log: records events with timestamps to see where it stalls on iPhone (last 80) */
 const MICLOG_KEY="toronto-talk-miclog";
 let micLogs=[]; try{micLogs=JSON.parse(localStorage.getItem(MICLOG_KEY)||"[]")}catch(e){}
 function micLog(t){
@@ -623,7 +623,7 @@ function copyMicLog(btn){
   try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
 }
 const RESUME_KEY="toronto-talk-resume";
-// 인식이 계속 아무것도 못 들으면, 지금 위치를 저장해 두고 앱을 다시 열도록 안내해요
+// If recognition keeps hearing nothing, save the current position and prompt the user to reopen the app
 function showMicStuck(){
   saveResume();
   const m=cur&&cur.done?document.getElementById("bonusMsg"):document.getElementById("msg"); if(!m)return;
@@ -633,7 +633,7 @@ function showMicStuck(){
 function saveResume(){
   try{
     if(session&&view==="quiz"){
-      // 지금 문제는 아직 안 풀었으면 처음부터, 풀었으면 다음 문제부터
+      // Resume from the current question if it isn't answered yet, otherwise from the next one
       const pos=cur&&cur.done?session.pos+1:session.pos;
       localStorage.setItem(RESUME_KEY,JSON.stringify({queue:session.queue,pos,results:session.results,at:Date.now()}));
     }
@@ -654,7 +654,7 @@ function resumeSaved(){
 function stopSpeech(){try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}}
 function toggleListening(){
   micLog(`말하기 누름 (듣는 중=${listening}, 이전 인식=${rec?rec.__n:"없음"}, 문제 ${session?session.pos+1:"?"})`);
-  // 틀린 뒤 다시 누른 건 '다시 말할게요'라는 뜻이에요. 인식은 끄지 않고 같은 인식으로 계속 들어요.
+  // Pressing again after a wrong answer means "I'll say it again". Keep the same recognition running instead of stopping it.
   if(listening&&rec&&rec.__awaitRetry&&!cur.done){
     rec.__awaitRetry=false; rec.__arm(IDLE_MS,false); rec.__consumed=rec.__full||rec.__consumed;
     if(sentenceMode())resetAttempt(); micMsg("다시 말해 보세요."); setMicUI(); return }
@@ -662,25 +662,25 @@ function toggleListening(){
   if(!canMic||(cur.done&&!bonusOpen()))return;
   afterRecEnd=null; stopSpeech();
   voiceFlow=true;
-  if(isBox(document.activeElement))ansEl().blur();   // 키보드는 내려요
-  if(sentenceMode()&&!cur.done)resetAttempt();        // 다시 말하면 이번 문장은 새로 인식해요
-  if(rec&&!rec.__stopping){listening=true;setMicUI();micMsg("");rec.__consumed="";clearTimeout(rec.__pause);rec.__arm(IDLE_MS,false);return} // 열려 있는 인식으로 계속 들어요
+  if(isBox(document.activeElement))ansEl().blur();   // Dismiss the keyboard
+  if(sentenceMode()&&!cur.done)resetAttempt();        // When speaking again, recognize this sentence from scratch
+  if(rec&&!rec.__stopping){listening=true;setMicUI();micMsg("");rec.__consumed="";clearTimeout(rec.__pause);rec.__arm(IDLE_MS,false);return} // Keep listening with the open recognition
   listening=true; setMicUI(); micMsg("");
-  // 앞선 인식이 아직 끝나는 중이면, 끝난 다음에 바로 새로 시작해요 (중간에 끊으면 아이폰 인식이 고장 나요)
+  // If the previous recognition is still ending, start a new one right after it ends (cutting it off breaks iPhone recognition)
   if(rec){pendingStart=true;gracefulStop(rec);return}
   startSoon(0);
 }
-/* 한 문제 동안은 인식 하나를 계속 열어 두고(continuous), 다시 말하기도 같은 인식으로 들어요.
-   아이폰은 인식이 끝난 직후 새 인식을 시작하면 소리를 못 받아요(기록으로 확인: audiostart 뒤 아무 결과 없음).
-   말 한 번이 끝난 시점은 iOS의 최종 결과, 또는 1초 동안 새 결과가 없을 때로 봐요. 그때만 채점하고,
-   정답이면 그 경계에서 stop()해요 (말하는 도중에는 끊지 않아요). */
+/* Keep one recognition open (continuous) for the whole question, and listen to retries with the same recognition.
+   On iPhone, starting a new recognition right after one ends hears no audio (confirmed in logs: nothing after audiostart).
+   An utterance is considered finished at an iOS final result, or after 1 second with no new results. Grade only then,
+   and if correct, stop() at that boundary (never cut off mid-speech). */
 const PAUSE_MS=1000, FIRST_WAIT_MS=8000, IDLE_MS=20000;
 function beginRec(retry){
   const r=new SR(); rec=r; const t0=Date.now(); r.__n=++recSeq;
   r.__consumed=""; r.__text="";
   const lg=t=>micLog(`#${r.__n} ${t} +${Date.now()-t0}ms`);
   for(const ev of ["start","audiostart","soundstart","speechstart","speechend","soundend","audioend","nomatch"])r.addEventListener(ev,()=>lg(ev));
-  // 말을 시작하지 않으면 '듣는 중'에 멈춰 있지 않게 정리해요
+  // If the user never starts speaking, clean up so the UI isn't stuck on "listening"
   const arm=(ms,first)=>{clearTimeout(r.__wd);r.__wd=setTimeout(()=>{
     if(rec!==r)return;
     lg(first?"8초 동안 결과 없음 → stop":"20초 동안 말이 없음 → stop");
@@ -696,13 +696,13 @@ function beginRec(retry){
     if(rec!==r)return;
     if(!r.__heard){r.__heard=true;missCount=0}
     const join=k=>all.map((x,i)=>x[i===all.length-1?k:0].transcript).join(" ").replace(/\s+/g," ").trim();
-    // 이미 채점한 말은 빼고, 이번에 새로 한 말만 봐요 (iOS가 문장을 처음부터 다시 쓰면 그대로 써요)
+    // Skip speech that was already graded and look only at what's new (if iOS rewrites the sentence from the start, use it as is)
     const fresh=t=>{const c=r.__consumed;return c&&t.toLowerCase().startsWith(c.toLowerCase())?t.slice(c.length).trim():t};
     const text=fresh(join(0));
     if(!text)return;
     clearTimeout(r.__pause); r.__awaitRetry=false;
     if(lastR.isFinal){
-      // 첫 후보가 틀려도 다른 인식 후보 중 정답이 있으면 그걸 써요 (예: "buck"을 "book"으로 들었을 때)
+      // Even if the first alternative is wrong, use another alternative that matches the answer (e.g. "buck" heard as "book")
       let pick=text;
       for(let i=0;i<lastR.length;i++){const c=fresh(join(i));if(c&&candidateOk(c)){pick=c;break}}
       utteranceDone(r,pick,true,join(0));
@@ -718,7 +718,7 @@ function beginRec(retry){
     if(rec!==r)return;
     clearTimeout(r.__wd); clearTimeout(r.__pause);
     const quick=Date.now()-t0<1200;
-    if(!retry&&quick&&listening&&["audio-capture","network"].includes(e.error)){ // 막 시작했는데 실패하면 끝난 뒤 한 번 더 시도해요
+    if(!retry&&quick&&listening&&["audio-capture","network"].includes(e.error)){ // If it fails right after starting, try once more after it ends
       r.__retry=true;
     }else if(e.error!=="aborted"||!r.__stopping){
       listening=false; setMicUI();
@@ -726,21 +726,21 @@ function beginRec(retry){
       else if(e.error==="no-speech")micMsg("소리가 안 들렸어요. 버튼을 다시 누르고 말해 보세요.");
       else if(e.error!=="aborted")micMsg(`음성 인식이 잠깐 안 됐어요. 다시 눌러 보세요. (${e.error})`);
     }
-    // 오류 뒤에 끝 신호가 안 올 수도 있어서, 조금 뒤 정리해요
+    // The end signal may not arrive after an error, so clean up shortly after
     clearTimeout(r.__forget); r.__forget=setTimeout(()=>recDone(r),800);
   };
   r.onend=()=>{lg("end");clearTimeout(r.__pause);recDone(r)};
   lg("start() 호출");
   try{r.start()}catch(e){lg("start() 예외 "+e.name);rec=null;listening=false;setMicUI();micMsg("음성 인식을 시작하지 못했어요. 다시 눌러 보세요.")}
 }
-// 말하는 중에는 화면에만 보여 주고 채점하지 않아요
+// While speaking, only show it on screen; don't grade
 function showHeard(t){
   if(cur.done&&!bonusOpen())return;
-  if(sentenceMode()&&!cur.done&&cur.resetNext)resetAttempt();   // 틀린 뒤 다시 말하면 새 문장으로 받아요
+  if(sentenceMode()&&!cur.done&&cur.resetNext)resetAttempt();   // Speaking again after a wrong answer is taken as a new sentence
   ansEl().value=t;
   sentenceMode()?renderSaid():renderBoxes();
 }
-// 말 한 번이 끝났을 때 채점해요
+// Grade when an utterance ends
 function utteranceDone(r,text,final,full){
   clearTimeout(r.__pause);
   if(cur.done&&!bonusOpen()){r.__consumed=full;return}
@@ -749,15 +749,15 @@ function utteranceDone(r,text,final,full){
   ansEl().value=text;
   if(cur.done){ sentenceMode()?renderSaid():renderBoxes(); checkBonus() }
   else if(sentenceMode()){ renderSaid(); checkSentence(final) }
-  else{ renderBoxes(); check(true) }   // 단어 모드는 말이 멈추면 다 말한 거예요
+  else{ renderBoxes(); check(true) }   // In word mode, a pause means the user has finished
   const judged=cur.done!==wasDone||(cur.attempts||[]).length>tries||cur.wasWrong||final;
   if(judged)r.__consumed=full;
   if(!cur.done&&rec===r)r.__awaitRetry=true;
   micLog(`#${r.__n} ${final?"최종":"1초 멈춤"} 채점: "${text}" → ${cur.done?(wasDone?"보너스 처리":"정답"):judged?"틀림, 계속 듣는 중":"아직 말하는 중"}`);
-  if(cur.done&&!bonusOpen()&&rec===r){gracefulStop(r);listening=false;setMicUI()}  // 말이 끝난 경계에서만 닫아요
+  if(cur.done&&!bonusOpen()&&rec===r){gracefulStop(r);listening=false;setMicUI()}  // Close only at the end of an utterance
 }
 
-// 페이지 안 확인 창 (아티팩트에서는 confirm()이 동작하지 않아서 직접 만들어요)
+// In-page confirm dialog (confirm() doesn't work inside artifacts, so we build our own)
 function confirmBox({title,body,ok,cancel},onOk){
   const old=document.getElementById("modal"); if(old)old.remove();
   const m=document.createElement("div"); m.className="modal"; m.id="modal";
@@ -804,7 +804,7 @@ function startSession(extraNew){
   buildQuizShell(); view="quiz"; renderQuiz();
 }
 
-/* ---------- 학습 홈 ---------- */
+/* ---------- Study home ---------- */
 function renderHome(){
   view="study"; setTabs("study");
   const due=dueCards().length, nw=newSlots();
@@ -890,7 +890,7 @@ function renderHome(){
   };
 }
 
-/* ---------- 퀴즈 ---------- */
+/* ---------- Quiz ---------- */
 let cur=null;
 function trackHTML(){
   const n=session.queue.length, p=session.pos;
@@ -899,13 +899,13 @@ function trackHTML(){
   return `<div class="track" aria-hidden="true"><span class="fill" style="width:${n>24?(p/n*100):pct}%"></span>${stations}</div>
   <div class="trackmeta"><span>${p+1} / ${n}번째 역</span><span>종점까지 ${n-p-1}개</span></div>`;
 }
-// 퀴즈 화면은 세션마다 한 번만 만들고, 문제가 바뀔 땐 내용만 바꿔요.
-// 첫 입력칸(#ans)은 계속 같은 요소로 남아 있어야 휴대폰 키보드가 닫히지 않고 고른 언어(영어)가 유지돼요.
-// 여러 단어로 된 정답은 단어마다 입력칸을 나누고, 하이픈·아포스트로피 같은 기호는 칸 사이에 고정 글자로 보여 줘요.
+// The quiz screen is built once per session; only its contents change between questions.
+// The first input (#ans) must stay the same element so the phone keyboard doesn't close and keeps the chosen language (English).
+// Multi-word answers get one slot per word; symbols like hyphens and apostrophes are shown as fixed characters between slots.
 const INPUT_ATTRS='type="search" lang="en" inputmode="latin" enterkeyhint="next" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" autocapitalize="off" autocorrect="off" spellcheck="false"';
-/* 입력칸 구조: 실제 입력칸은 #ans 하나뿐이고, 계속 포커스를 유지해요.
-   보이는 단어 칸들은 #ans에 친 글자를 단어 길이대로 나눠 그린 화면이에요.
-   포커스가 칸 사이를 옮겨 다니지 않으니 아이폰에서 화면이 확대되거나 키보드가 깜빡이지 않아요. */
+/* Input structure: #ans is the only real input, and it keeps focus the whole time.
+   The visible word slots are a rendering of the text typed into #ans, split by word length.
+   Since focus never moves between slots, the iPhone screen doesn't zoom and the keyboard doesn't flicker. */
 let boxLens=[], boxEls=[], placeholderTxt="";
 const ansEl=()=>document.getElementById("ans");
 const isBox=el=>!!el&&el.id==="ans";
@@ -914,8 +914,8 @@ function keepFocus(el){
   el.addEventListener("mousedown",e=>{if(isBox(document.activeElement))e.preventDefault()});
 }
 function segments(ans){return ans.split(/([^A-Za-z0-9]+)/).filter(x=>x!=="").map(x=>({word:/[A-Za-z0-9]/.test(x),text:x}))}
-// 친 글자를 칸마다 나눠요: 단어 길이를 채우면 다음 칸으로, 띄어쓰기·기호를 쳐도 다음 칸으로.
-// 자동으로 넘어간 직후의 띄어쓰기·기호는 버리고, 마지막 칸에서는 띄어쓰기를 그대로 둬요(여러 단어 대체 정답용).
+// Split typed text across slots: move to the next slot when a word's length is filled, or when a space/symbol is typed.
+// Drop a space/symbol typed right after an automatic advance; keep spaces in the last slot (for multi-word alternative answers).
 function distribute(raw){
   const out=boxLens.map(()=>""), last=boxLens.length-1; let i=0, auto=false;
   for(const ch of raw){
@@ -929,12 +929,12 @@ function distribute(raw){
   return {out,active:i};
 }
 function renderBoxes(){
-  const hideTyped=sentenceMode()&&cur&&!cur.done;   // 문장 모드: 말한 내용은 아래 상자에만, 빈칸은 비워 둬요
+  const hideTyped=sentenceMode()&&cur&&!cur.done;   // Sentence mode: show what was said only in the box below; leave the blanks empty
   const {out,active}=hideTyped?{out:boxLens.map(()=>""),active:0}:distribute(ansEl().value);
   boxEls.forEach((el,i)=>{
     const t=el.querySelector(".blank");
     const ph=i===0&&!out[0]&&placeholderTxt;
-    t.textContent=ph?placeholderTxt:(out[i].replace(/\s+$/," ")||"\u200b"); // 빈 칸도 글자 기준선에 맞추려고 폭 0 글자를 넣어요
+    t.textContent=ph?placeholderTxt:(out[i].replace(/\s+$/," ")||"\u200b"); // Insert a zero-width character so empty slots align to the text baseline
     t.classList.toggle("ph",!!ph);
     el.classList.toggle("active",i===active);
   });
@@ -984,10 +984,10 @@ function wireAnswer(inp){
     if(cur.done){next();return}
     check(true);
   });
-  // 정답 처리 후에는 입력을 막되 readOnly를 쓰지 않아 키보드가 계속 열려 있게 해요
+  // After the answer is accepted, block input without using readOnly so the keyboard stays open
   inp.addEventListener("beforeinput",e=>{
     if(cur&&cur.done&&!bonusOpen()&&e.inputType!=="insertLineBreak"){e.preventDefault();return}
-    if(cur&&!cur.done&&cur.resetNext&&sentenceMode()&&e.inputType.startsWith("insert")){ // 틀린 뒤 다시 말하면 이전 문장은 지우고 새로 받아요
+    if(cur&&!cur.done&&cur.resetNext&&sentenceMode()&&e.inputType.startsWith("insert")){ // Speaking again after a wrong answer clears the previous sentence and takes a new one
       resetAttempt();
     }
   });
@@ -996,7 +996,7 @@ function wireAnswer(inp){
     if(sentenceMode()){
       renderSaid();
       if(cur.done){checkBonus();return}
-      clearTimeout(cur.autoT); cur.autoT=setTimeout(()=>checkSentence(false),1400); // 받아쓰기가 멈추면 자동 확인
+      clearTimeout(cur.autoT); cur.autoT=setTimeout(()=>checkSentence(false),1400); // Auto-check when dictation pauses
       return;
     }
     renderBoxes();
@@ -1004,7 +1004,7 @@ function wireAnswer(inp){
   });
   inp.addEventListener("focus",()=>document.getElementById("slots").classList.add("focused"));
   inp.addEventListener("blur",()=>document.getElementById("slots").classList.remove("focused"));
-  // 커서는 항상 맨 끝에 (칸 화면과 어긋나지 않게)
+  // Keep the cursor at the end (so it stays in sync with the slot display)
   const toEnd=()=>{try{inp.setSelectionRange(inp.value.length,inp.value.length)}catch(e){}};
   inp.addEventListener("select",toEnd); inp.addEventListener("click",toEnd);
 }
@@ -1039,7 +1039,7 @@ function buildQuizShell(){
     </div>
   </div>`;
   wireAnswer(document.getElementById("ans"));
-  // 카드 안 빈 곳(문장, 빈칸, 말한 문장 상자)을 누르면 키보드가 다시 올라와요
+  // Tapping inside the card (sentence, blanks, spoken-sentence box) brings the keyboard back up
   document.getElementById("card").addEventListener("click",e=>{if(!e.target.closest("button,a,select"))ansEl().focus({preventScroll:true})});
   for(const id of ["hintBtn","revealBtn","nextBtn"])keepFocus(document.getElementById(id));
   document.getElementById("hintBtn").onclick=hint;
@@ -1079,14 +1079,14 @@ function renderQuiz(){
   document.querySelector("#card .actions").hidden=false;
   document.getElementById("fb").innerHTML="";
   const first=ansEl();
-  afterRecEnd=null; // 지난 문제의 읽기가 새 문제에서 나오지 않게
+  afterRecEnd=null; // So the previous question's read-aloud doesn't play on the new question
   if(listening)stopListening();
   const mb2=document.getElementById("micBtn"); if(mb2)mb2.hidden=false;
   if(!voiceFlow&&document.activeElement!==first)first.focus({preventScroll:true});
   window.scrollTo({top:0});
 }
-// 표기만 다른 답(캐나다/미국 철자, 줄임말, 지역 표현)은 같은 정답으로 봐요. 하이픈·띄어쓰기는 채점에서 아예 무시해요.
-// 보너스 도전은 뜻이 같은 '다른 단어'로 맞혔을 때만 열려요.
+// Answers that differ only in spelling (Canadian/US spelling, contractions, regional forms) count as the same answer. Hyphens and spaces are ignored entirely when grading.
+// The bonus challenge only opens when the user answered with a different word that has the same meaning.
 const SPELLING=[["favour","favor"],["cheque","check"],["chequing","checking"],["cancelled","canceled"],["burned","burnt"],
   ["inquire","enquire"],["id","identification"],["ac","air conditioning"],["intro","introduction"],["invite","invitation"],
   ["cc'ing","ccing"],["two-four","2-4"],["line","lineup"],["in-suite","ensuite"],["statutory","stat"],["missing","missed"],
@@ -1112,15 +1112,15 @@ function hint(){
   const hb=document.getElementById("hintBtn");
   if(cur.hints>=maxHints(a)){hb.disabled=true;hb.textContent="힌트 다 씀"}else hb.textContent="한 글자 더";
 }
-// 입력할 때마다 자동 확인: 칸에 쓴 단어들만 이어 붙여 비교해요(띄어쓰기·하이픈·대소문자 무시).
-/* 키보드 받아쓰기로 문장 일부("I'll stick around")나 전체를 말해도 정답을 찾아요.
-   정답 앞뒤에 붙은 단어가 모두 이 문장에 원래 있는 단어일 때만 인정해서, 후보를 여러 개 말하는 건 정답이 안 돼요. */
+// Auto-check on every input: join only the words typed in the slots and compare (ignoring spaces, hyphens and case).
+/* Finds the answer even when part of the sentence ("I'll stick around") or all of it is spoken with keyboard dictation.
+   It's accepted only if every word around the answer actually belongs to this sentence, so saying several candidates doesn't count. */
 function spokenMatch(targetsL){
   const words=norm(ansEl().value).split(/[^a-z0-9']+/).map(loose).filter(Boolean);
   if(words.length<2)return -1;
   const [pre,post]=cur.card.en.split("___");
   const ctx=new Set((pre+" "+post).toLowerCase().split(/[^a-z0-9']+/).map(loose).filter(Boolean));
-  // 줄임말을 풀어 말해도 되도록 (I'll → I will 등) 흔한 기능어는 허용해요
+  // Allow common function words so expanded contractions are fine (I'll → I will, etc.)
   ["i","will","you","we","they","he","she","it","is","am","are","not","do","does","the","a","an","to","would","have","has","let","us","um","uh","so","okay"].forEach(w=>ctx.add(w));
   for(let i=0;i<words.length;i++)for(let j=i;j<words.length;j++){
     const k=targetsL.indexOf(words.slice(i,j+1).join(""));
@@ -1137,9 +1137,9 @@ function applyHit(hit){
   finish(cur.hints?"hinted":"clean");
 }
 
-/* ---------- 문장 말하기 모드 ----------
-   문장 전체를 받아쓰기(키보드 마이크)나 타이핑으로 입력하면, 원래 문장과 단어 단위로 맞춰 봐요.
-   정답 여부는 빈칸 단어로만 정하고, 문장 일치도는 참고로 보여 줘요. 줄임말(I'll ↔ I will)은 같은 것으로 봐요. */
+/* ---------- Sentence speaking mode ----------
+   When the whole sentence is entered by dictation (keyboard mic) or typing, it's aligned word by word with the original sentence.
+   Correctness depends only on the blank word; sentence match is shown for reference. Contractions (I'll ↔ I will) count as equal. */
 const sentenceMode=()=>settings.answerMode==="sentence";
 function applyMode(reset){
   const on=sentenceMode(), card=document.getElementById("card");
@@ -1158,7 +1158,7 @@ function expand(t){
 }
 const toks=t=>expand(t).split(/[^a-z0-9']+/).map(w=>w.replace(/'/g,"")).filter(Boolean);
 const tokEq=(a,b)=>a===b||isSpellingVariant(a,b);
-// 두 단어가 얼마나 비슷한지 (0~1, 편집 거리 기준)
+// How similar two words are (0–1, based on edit distance)
 function similar(a,b){
   if(a===b)return 1; const m=a.length,n=b.length; if(!m||!n)return 0;
   let prev=[...Array(n+1).keys()];
@@ -1168,7 +1168,7 @@ function similar(a,b){
 function alignTokens(T,S){
   const n=T.length,m=S.length,d=Array.from({length:n+1},()=>new Array(m+1).fill(0));
   for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)d[i][j]=tokEq(T[i],S[j])?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
-  // ops: 말한 단어 순서대로 맞음(ok) / 다르게 말함(sub) / 빠뜨림(miss) / 문장에 없는 말(extra)
+  // ops, in spoken-word order: correct (ok) / said differently (sub) / omitted (miss) / not in the sentence (extra)
   const hit=new Array(n).fill(false), raw=[]; let i=0,j=0;
   while(i<n&&j<m){
     if(tokEq(T[i],S[j])){hit[i]=true;raw.push({t:"ok",i,s:S[j]});i++;j++}
@@ -1177,8 +1177,8 @@ function alignTokens(T,S){
   }
   while(i<n)raw.push({t:"miss",i:i++});
   while(j<m)raw.push({t:"extra",s:S[j++]});
-  // 맞은 단어 사이 구간마다, 다르게 말한 단어를 그 구간에서 가장 비슷한 원래 단어와 짝지어요
-  // (예: "embrassed"만 말하면 문장 끝 단어가 아니라 빈칸 단어 자리와 짝지어요)
+  // In each span between matched words, pair each differently-spoken word with the most similar original word in that span
+  // (e.g. saying only "embrassed" pairs it with the blank word, not the last word of the sentence)
   const ops=[]; let gap=[];
   const flush=()=>{
     const M=gap.filter(o=>o.t==="miss"), E=gap.filter(o=>o.t==="extra"), pair=new Map(); let from=0;
@@ -1207,7 +1207,7 @@ function gradeSentence(){
   });
   return best;
 }
-// 다시 말하기 전에: 지난 시도는 기록으로 남기고, 이번 문장은 빈 상태에서 새로 인식해요
+// Before speaking again: keep the last attempt in the history and recognize this sentence from an empty state
 function resetAttempt(){
   ansEl().value=""; cur.sentDiff=null; cur.lastJudged=null; cur.resetNext=false; cur.wasWrong=false;
   clearTimeout(cur.autoT); toggleWrong(false);
@@ -1227,11 +1227,11 @@ function checkSentence(pressed){
   cur.sentAll=[cur.card.answer,...cur.card.alts]; cur.sentHit=r.k;
   if(!r.said){if(pressed)msg.textContent="문장 전체를 말하거나 입력해 주세요.";return}
   const complete=r.said>=Math.max(2,r.T.length-1);
-  // 정답 여부는 빈칸 단어로만 정해요. 나머지 문장을 얼마나 맞게 읽었는지는 참고용으로만 보여 줘요.
-  if(!pressed&&!complete&&!r.ok)return;   // 아직 말하는 중이면 기다려요
+  // Correctness depends only on the blank word. How accurately the rest of the sentence was read is shown for reference only.
+  if(!pressed&&!complete&&!r.ok)return;   // Wait if the user is still speaking
   cur.sentDiff=r; cur.sentAcc=mergeCover(r); cur.lastJudged=toks(ansEl().value).join(" ");
   if(r.ok){renderSaid();setTyped(cur.sentAll[r.k]);applyHit(r.k);return}
-  // 틀린 시도는 기록해 두고, 다음에 말하거나 입력하면 새 문장으로 인식해요
+  // Record the wrong attempt; the next speech or input is treated as a new sentence
   (cur.attempts=cur.attempts||[]).push({text:ansEl().value.trim(),ok:r.hit.filter(Boolean).length,n:r.T.length});
   cur.resetNext=true; renderSaid();
   if(!cur.wasWrong)cur.wrongs++; cur.wasWrong=true;
@@ -1239,7 +1239,7 @@ function checkSentence(pressed){
   msg.textContent=cur.hints?"빈칸 단어가 달라요. 다시 말하거나 정답을 확인하세요.":"빈칸 단어가 달라요. 다시 말하거나 힌트를 써 보세요.";
   document.getElementById("revealBtn").hidden=false;
 }
-// 지난 시도들: 무엇을 말했고 몇 단어가 맞았는지 한 줄씩 (빈칸 정답은 보여 주지 않아요)
+// Past attempts: one line each with what was said and how many words matched (the blank's answer is never shown)
 function attemptsHTML(){
   const a=cur.attempts||[]; if(!a.length)return"";
   return `<ol class="tries">${a.map((t,i)=>`<li><b>${i+1}</b><span>${esc(t.text||"(빈 입력)")}</span><em>${t.ok}/${t.n}</em></li>`).join("")}</ol>`;
@@ -1249,7 +1249,7 @@ function renderSaid(){
   const r=cur.sentDiff, v=ansEl().value;
   if(r&&!cur.done&&toks(v).join(" ")!==cur.lastJudged){cur.sentDiff=null;return renderSaid()}
   if(r){
-    // 정답을 확인하기 전에는 빈칸 자리의 정답 단어를 절대 보여 주지 않아요
+    // Never reveal the answer word in the blank's position before the answer is confirmed
     const isKey=i=>i!=null&&i>=r.aS&&i<r.aS+r.aL, hide=!cur.done;
     const show=w=>w==="i"?"I":w;
     const okN=r.hit.filter(Boolean).length;
@@ -1282,11 +1282,11 @@ function check(pressedEnter){
   const all=[cur.card.answer,...cur.card.alts], allL=all.map(loose);
   let hit=v?allL.indexOf(v):-1;
   if(hit<0){const k=spokenMatch(allL);if(k>=0){hit=k;v=allL[k]}}
-  if(hit>=0){setTyped(all[hit]);applyHit(hit);return} // 대소문자·마침표 없이 깔끔하게 칸에 보여 줘요
+  if(hit>=0){setTyped(all[hit]);applyHit(hit);return} // Show it cleanly in the slots, without capitals or periods
   const minLen=Math.min(...allL.map(a=>a.length));
   const stillPossible=allL.some(a=>a.startsWith(v)&&a.length>v.length);
   const wrong=v.length>=minLen&&!stillPossible;
-  if(wrong&&!cur.wasWrong)cur.wrongs++; // 틀린 상태로 바뀔 때마다 1회
+  if(wrong&&!cur.wasWrong)cur.wrongs++; // Counted once each time the state turns wrong
   cur.wasWrong=wrong;
   toggleWrong(wrong);
   if(wrong){
@@ -1298,9 +1298,9 @@ function check(pressedEnter){
   }
 }
 function reveal(){fillBoxes(cur.card.answer);finish("revealed")}
-/* ---------- 복습 주기 ----------
-   결과를 다섯 단계로 나누고, 표현마다 '쉬움 계수(ease)'와 '복습 간격(ivl, 일)'을 따로 기억해요.
-   빠르고 정확하게 맞힐수록 간격이 크게 늘고, 틀리거나 힌트를 쓰면 짧아져요. */
+/* ---------- Review schedule ----------
+   Results are split into five grades, and each expression keeps its own ease factor (ease) and review interval (ivl, in days).
+   The faster and more accurately it's answered, the more the interval grows; wrong answers or hints shorten it. */
 const GRADE={
   perfect:{label:"빠르게 정답",desc:"힌트·오답 없이 빠르게"},
   good:{label:"정답",desc:"힌트·오답 없이"},
@@ -1311,8 +1311,8 @@ const GRADE={
 function gradeOf(result){
   if(result!=="clean")return result;
   const letters=loose(cur.card.answer).length;
-  let fast=6+0.35*letters, slow=20+letters;     // 초 단위, 정답이 길수록 여유를 줘요
-  if(cur.sentAcc!=null){const w=toks(cur.card.en.replace("___",cur.card.answer)).length;fast+=3+0.5*w;slow+=6+w} // 문장 모드는 말하는 시간만큼 더
+  let fast=6+0.35*letters, slow=20+letters;     // In seconds; longer answers get more leeway
+  if(cur.sentAcc!=null){const w=toks(cur.card.en.replace("___",cur.card.answer)).length;fast+=3+0.5*w;slow+=6+w} // Sentence mode adds time for speaking
   if(cur.wrongs>0||cur.secs>slow)return"hard";
   return cur.secs<=fast?"perfect":"good";
 }
@@ -1320,12 +1320,12 @@ function schedule(result){
   const c=cur.card, item=cur.item, t=dayKey();
   cur.secs=Math.max(0,(performance.now()-cur.t0-cur.paused)/1000);
   cur.grade=gradeOf(result);
-  if(item.retry)return; // 같은 날 재시도는 일정에 반영하지 않음
+  if(item.retry)return; // Same-day retries don't affect the schedule
   log[t]=(log[t]||0)+1; markDirty("meta");
   const prev=progress[c.id]||{seen:0,firstSeen:t};
   const isNew=!progress[c.id];
   const pIvl=isNew?0:cardIvl(prev);
-  // 이전에 힌트를 썼던 표현은 간격을 1일부터 다시 키워요
+  // Expressions that previously needed a hint grow their interval again starting from 1 day
   const base=prev.hinted?1:pIvl;
   let ease=prev.ease||2.5, ivl;
   switch(cur.grade){
@@ -1337,7 +1337,7 @@ function schedule(result){
   }
   ease=Math.min(3.2,Math.max(1.3,ease));
   ivl=Math.min(180,ivl);
-  if(ivl>=6)ivl+=Math.round(ivl*0.08*(Math.random()*2-1)); // 같은 날에 몰리지 않게 살짝 흩어요
+  if(ivl>=6)ivl+=Math.round(ivl*0.08*(Math.random()*2-1)); // Jitter slightly so reviews don't pile up on the same day
   const st={...prev,seen:(prev.seen||0)+1,last:t,ease,ivl,due:addDays(ivl),
     hinted:cur.grade==="hinted"||cur.grade==="revealed",lastGrade:cur.grade,
     lastSecs:Math.round(cur.secs*10)/10,lastWrongs:cur.wrongs};
@@ -1385,10 +1385,10 @@ function finish(result){
   if(listening)releaseListening();
   if(settings.autoSpeak&&canSpeak){
     if(canMic&&(rec||Date.now()-micEndedAt<1500)){
-      if(!settings.micQuiet)afterMic(()=>{if(cur&&cur.done&&!listening)speak(full)}); // 마이크가 완전히 꺼진 뒤에 읽어요
+      if(!settings.micQuiet)afterMic(()=>{if(cur&&cur.done&&!listening)speak(full)}); // Read aloud only after the mic is fully off
     }else if(sentenceMode()&&isBox(document.activeElement)){
-      // 받아쓰기 마이크가 켜져 있으면 iOS가 소리를 통화 모드처럼 작게 내요.
-      // 그래서 문장 모드에서는 키보드를 내려 마이크를 끈 뒤, 잠깐 기다렸다가 읽어요.
+      // While the dictation mic is on, iOS plays audio quietly, like in call mode.
+      // So in sentence mode we dismiss the keyboard to turn off the mic, wait briefly, then read aloud.
       ansEl().blur();
       setTimeout(()=>speak(full),650);
     }else speak(full);
@@ -1398,7 +1398,7 @@ function finish(result){
   if(!isBox(document.activeElement))nb.focus({preventScroll:true});
   showFeedback();
 }
-// 키보드에 가리지 않도록, 보이는 화면(visualViewport) 기준으로 설명 박스와 다음 버튼을 끌어올려요
+// Lift the note box and Next button based on the visible area (visualViewport) so the keyboard doesn't cover them
 function showFeedback(){
   const target=document.getElementById("fb");
   const run=()=>{
@@ -1410,8 +1410,8 @@ function showFeedback(){
   };
   requestAnimationFrame(run); setTimeout(run,250);
 }
-/* ---------- 보너스 도전: 대체 정답으로 맞혔을 때 기본 표현도 떠올려 보기 ----------
-   채점과 복습 일정은 이미 끝난 상태라, 보너스 힌트나 정답 보기는 기록에 영향을 주지 않아요. */
+/* ---------- Bonus challenge: after answering with an alternative, try recalling the main expression too ----------
+   Grading and scheduling are already done, so bonus hints or revealing the answer don't affect the records. */
 function bonusOpen(){return !!(cur&&cur.bonus&&cur.bonus.state==="open")}
 function startBonus(){
   cur.bonus={state:"open",hints:0};
@@ -1490,7 +1490,7 @@ document.addEventListener("keydown",e=>{
   if(view==="quiz"&&cur&&cur.done&&e.key==="Enter"&&!isBox(document.activeElement)&&document.activeElement.id!=="fbNext"){e.preventDefault();next()}
 });
 
-/* ---------- 단어장 ---------- */
+/* ---------- Word list ---------- */
 const wordsState={q:"",status:"all",line:"all",limit:40};
 function renderWords(){
   view="words"; setTabs("words");
@@ -1557,7 +1557,7 @@ function renderWordList(){
   const mb=document.getElementById("moreBtn"); if(mb)mb.onclick=()=>{wordsState.limit+=40;renderWordList()};
 }
 
-/* ---------- 대시보드 ---------- */
+/* ---------- Dashboard ---------- */
 function backupCode(){
   const json=JSON.stringify({v:1,progress,settings,log});
   return "TT1:"+btoa(unescape(encodeURIComponent(json)));
@@ -1592,22 +1592,22 @@ function wireBackup(){
 function renderStats(){
   view="stats"; setTabs("stats");
   const s=streakInfo(), t=dayKey();
-  // 최근 14일 연속 노선
+  // Streak line for the last 14 days
   const days14=[...Array(14)].map((_,i)=>addDays(i-13));
   const on=days14.map(k=>(log[k]||0)>0);
   let segs="";
   for(let i=0;i<13;i++)if(on[i]&&on[i+1])segs+=`<span class="seg-on" style="left:${i/13*100}%;width:${100/13}%"></span>`;
-  // 최근 30일 막대
+  // Bars for the last 30 days
   const days30=[...Array(30)].map((_,i)=>addDays(i-29));
   const vals=days30.map(k=>log[k]||0), max=Math.max(...vals,1);
   const nice=max<=5?5:max<=10?10:Math.ceil(max/10)*10;
   const last7=days30.slice(-7).reduce((a,k)=>a+(log[k]||0),0);
   const totalAns=Object.values(log).reduce((a,b)=>a+b,0);
-  // 표현 상태
+  // Expression status
   const cnt={mastered:0,learning:0,again:0,new:0};
   CARDS.forEach(c=>cnt[status(c.id)]++);
   const N=CARDS.length, pct=n=>(n/N*100).toFixed(2)+"%";
-  // 앞으로 7일
+  // Next 7 days
   const upcoming=[...Array(7)].map((_,i)=>{const k=addDays(i);return {k,n:CARDS.filter(c=>progress[c.id]&&(i===0?progress[c.id].due<=k:progress[c.id].due===k)).length}});
   app.innerHTML=`
   <div class="wrap">
@@ -1699,7 +1699,7 @@ function renderStats(){
   </div>`;  wireBackup();
 }
 
-/* ---------- 시작 ---------- */
+/* ---------- Startup ---------- */
 loadLocal();
 const changed=normalizeSettings(), built=ensureLog();
 if(changed||built)saveLocal();

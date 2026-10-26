@@ -1,20 +1,20 @@
 # Toronto Talk
 
-토론토·캐나다에서 자주 쓰는 일상·비즈니스 영어 표현을 한국어 해석과 함께 빈칸 채우기로 익히는 학습 앱이에요.
+A study app for learning everyday and business English expressions commonly used in Toronto and Canada, through fill-in-the-blank practice with Korean translations.
 
-**바로 쓰기:** https://chaeeunlee227.github.io/toronto-talk/
+**Try it now:** https://chaeeunlee227.github.io/toronto-talk/
 
-## 기능
-- 표현 1,200여 개, 11개 노선(일상 회화, 감정·관계, 식당·쇼핑, 여행·교통, 집·병원·은행, 회의·업무, 이메일·메신저, 구동사, 관용구, 색·꽃·자연, 맛·질감)
-- 힌트(첫 1~2글자), 정답 보기, 대체 정답 보너스 도전
-- 걸린 시간·오답 횟수로 복습 주기를 정하는 간격 반복
-- 페이지 안 마이크로 말해서 답하기(단어 모드 / 문장 모드), 예문 듣기
-- 단어장, 연속 학습일, 30일 활동, 노선별 진도 대시보드
-- 학습 기록은 이 브라우저에 저장돼요. 대시보드의 **백업 코드 복사 / 붙여넣기**로 옮기거나 되살릴 수 있어요.
+## Features
+- 1,200+ expressions across 11 lines (Everyday talk, Feelings & relationships, Restaurants & shopping, Travel & transit, Home, clinic & bank, Meetings & work, Email & messaging, Phrasal verbs, Idioms, Colours, flowers & nature, Taste & texture)
+- Hints (first 1–2 letters), reveal answer, and a bonus challenge for alternative answers
+- Spaced repetition that sets review intervals from answer time and number of mistakes
+- Answer by speaking into the in-page microphone (word mode / sentence mode), and listen to example sentences
+- Word list, study streak, 30-day activity, and per-line progress dashboard
+- Study progress is saved in this browser. Use **Copy / paste backup code** on the dashboard to move or restore it.
 
-## 아이폰에서
-Safari로 열고 공유 → **홈 화면에 추가**. 마이크는 처음 누를 때 허용해 주세요.
+## On iPhone
+Open in Safari, then Share → **Add to Home Screen**. Allow the microphone the first time you tap it.
 
-## 구조
-- `index.html` 등 맨 위 파일: GitHub Pages로 서비스되는 앱
-- `source/`: 표현 데이터(`data/*.txt`)와 템플릿·빌드 스크립트. `python3 build.py`로 `site/index.html`을 다시 만들어요.
+## Structure
+- `index.html` and other top-level files: the app, served by GitHub Pages
+- `source/`: expression data (`data/*.txt`), the template, and the build script. Run `python3 build.py` to regenerate `site/index.html`.
