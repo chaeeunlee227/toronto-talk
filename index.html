@@ -337,7 +337,7 @@ kbd{font:500 .75rem var(--mono);border:1px solid var(--rule);border-bottom-width
 <script>
 // Build target: false = Claude artifact, true = self-hosted (GitHub Pages)
 const HOSTED=true;
-const BUILD="1026-1946";
+const BUILD="1101-1501";
 /* ---------- Lines (categories) ---------- */
 const LINES = {
   talk:   {name:"일상 회화",     color:"var(--l-talk)"},
@@ -570,21 +570,6 @@ function speakWithBlank(card){
     else blankTimer=setTimeout(second,300);
   }catch(e){}
 }
-// Read the sentence with its blank (no answer) and call done() when the last part ends.
-// Used before restarting recognition: on iPhone a new recognition only hears audio if sound was played since the last one ended.
-function speakCue(card,done){
-  let fin=false; const finish=()=>{if(fin)return;fin=true;clearTimeout(t);done()};
-  const t=setTimeout(()=>{micLog("문장 읽기 끝 신호 없음");finish()},9000);
-  try{
-    speechSynthesis.cancel(); clearTimeout(blankTimer);
-    const parts=card.en.split("___").map(x=>x.trim()).filter(x=>x&&/[a-z0-9]/i.test(x));
-    if(!parts.length){unlockTts(finish);return}
-    micLog("인식 전에 문장 읽기");
-    const say=i=>{const u=utter(parts[i]);const last=i===parts.length-1;
-      u.onend=()=>{if(last)finish();else blankTimer=setTimeout(()=>say(i+1),500)};u.onerror=finish;speechSynthesis.speak(u)};
-    say(0);
-  }catch(e){finish()}
-}
 const fullSentence=c=>c.en.replace("___",c.answer);
 
 /* ---------- In-page microphone (self-hosted build only) ----------
@@ -655,10 +640,13 @@ function startSoon(retry){
   micWaiting=true; setMicUI(); micLog(`새 인식 ${w}ms 뒤 시작`);
   startT=setTimeout(()=>{micWaiting=false;if(listening&&!rec)beginRec(retry);else setMicUI()},w);
 }
-/* Run the after-recognition work a little after onend: iOS is still switching the audio session back to playback
-   at that moment, and a read started right away can be lost. */
-const AFTER_MIC_GAP=400;
-function runAfterRecEnd(){clearTimeout(afterRecT);const fn=afterRecEnd;afterRecEnd=null;if(fn)afterRecT=setTimeout(fn,AFTER_MIC_GAP)}
+/* Run the after-recognition work (the answer read) right inside onend, with no delay.
+   Device log 1026-1946: with a 400ms gap after onend the read played normally, but the next question's recognition
+   got audiostart and then heard nothing, and every restart after that ended with "audio-capture: Source is muted".
+   Reading right at onend (as in eed5f77) kept the next recognition working. The earlier lost first read was caused
+   by the iOS speechSynthesis lock (fixed by unlockTts), not by this timing. */
+const AFTER_MIC_GAP=0;
+function runAfterRecEnd(){clearTimeout(afterRecT);const fn=afterRecEnd;afterRecEnd=null;if(fn)fn()}
 // Work to do after recognition ends (e.g. reading the answer sentence aloud). If not recognizing, do it right away.
 // Playing sound while the mic is open breaks iPhone recognition. Read aloud the moment recognition has truly ended (onend).
 let afterRecT=null;
@@ -729,22 +717,19 @@ function toggleListening(){
   if(rec){pendingStart=true;gracefulStop(rec);return}
   preStart();
 }
-/* Before starting a new recognition, make sure iOS gets sound in between (rule from device logs):
-   - If speechSynthesis was never unlocked by a tap, unlock it now with a silent utterance, so the answer can be read later.
-   - If a recognition already ended and nothing was read since, read the sentence (with its blank) first.
-     Starting again without sound in between hears nothing. */
+/* Before starting a new recognition: if speechSynthesis was never unlocked by a tap, unlock it now with a silent
+   utterance, so the answer can be read later.
+   We no longer read the sentence before a restart (a06f65a): device log 1026-1946 showed it did not bring a deaf
+   recognition back (both restarts after it stayed deaf), and it played the sentence before the user had answered. */
 const CUE_GAP=400; let cueing=false;
 function preStart(){
-  const needCue=canSpeak&&micEndedAt>0&&lastTtsAt<micEndedAt&&!cur.done;
-  const needUnlock=canSpeak&&!ttsUnlocked;
-  if(!needCue&&!needUnlock){startSoon(0);return}
+  if(!(canSpeak&&!ttsUnlocked)){startSoon(0);return}
   cueing=true; micWaiting=true; setMicUI();
-  const go=()=>{
+  unlockTts(()=>{
     cueing=false;
     if(!listening||rec){micWaiting=false;setMicUI();return}
     startT=setTimeout(()=>{micWaiting=false;if(listening&&!rec)startSoon(0);else setMicUI()},CUE_GAP);
-  };
-  needCue?speakCue(cur.card,go):unlockTts(go);
+  });
 }
 /* Keep one recognition open (continuous) for the whole question, and listen to retries with the same recognition.
    On iPhone, starting a new recognition right after one ends hears no audio (confirmed in logs: nothing after audiostart).
@@ -798,7 +783,8 @@ function beginRec(retry){
       r.__retry=true;
     }else if(e.error!=="aborted"||!r.__stopping){
       listening=false; setMicUI();
-      if(e.error==="not-allowed"||e.error==="service-not-allowed")micMsg("마이크 권한이 꺼져 있어요. 아이폰 설정 > 앱 > Safari > 마이크에서 이 사이트를 허용해 주세요.");
+      if(e.error==="audio-capture"&&/muted/i.test(e.message||"")){missCount=0;showMicStuck()}  // The mic input is muted by iOS; restarts stay deaf
+      else if(e.error==="not-allowed"||e.error==="service-not-allowed")micMsg("마이크 권한이 꺼져 있어요. 아이폰 설정 > 앱 > Safari > 마이크에서 이 사이트를 허용해 주세요.");
       else if(e.error==="no-speech")micMsg("소리가 안 들렸어요. 버튼을 다시 누르고 말해 보세요.");
       else if(e.error!=="aborted")micMsg(`음성 인식이 잠깐 안 됐어요. 다시 눌러 보세요. (${e.error})`);
     }
